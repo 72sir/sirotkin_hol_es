@@ -1,0 +1,59 @@
+{
+  "control": "WebReports.Controls.Report",
+  "title": "Пример работы forEach с интерфейсом.",
+  "dataSources": [ ],
+  "dataParameters": [ ],
+  "reportViews": [
+    {
+      "condition": {
+        "parametersNames": [ "device" ],
+        "expression": "params.device == 'Desktop'"
+      },
+      "report": {
+        "control": "WebReports.Controls.ReportView",
+        "name": "ReportId",
+        "sections": [
+          {
+            "control": "WebReports.Controls.Section",
+            "name": "mapCustomControl1",
+            "content": {
+              "control": "WebReports.Controls.Primer.PrimerInterfForEach",
+              "forEachModel": [{
+                "forEachString": "Первый ",
+                "forEachNumber": 0
+              }, {
+                "forEachString" : "интерфейс ",
+                "forEachNumber" : 1
+              }, {
+                "forEachString" : "forEach.",
+                "forEachNumber" : 2
+              }
+              ]
+            }
+          }
+        ],
+        "layout": {
+          "control": "WebReports.Controls.ReportLayout",
+          "rows": [
+            {
+              "fluid": "true",
+              "cells": [
+                {
+                  "span": 12,
+                  "sectionName": "mapCustomControl1"
+                }
+              ]
+            }
+          ]
+        },
+        "dataSources": [],
+        "resources": [{
+          "uuid": "PrimerforEach_uuid_1",
+          "version": "1",
+          "filePath": "CompiledScripts/customControls/Primer/PrimerInterfForEach.js",
+          "mimeType": "application/javascript"
+        }]
+      }
+    }
+  ]
+}

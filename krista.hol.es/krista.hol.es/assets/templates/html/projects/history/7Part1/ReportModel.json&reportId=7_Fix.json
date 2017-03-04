@@ -1,0 +1,188 @@
+{
+	"control": "WebReports.Controls.Report",
+	"title": "Переключающиеся кнопки для отчета Дележова А.",
+	"dataSources": [],
+	"reportViews": [{
+		"condition": {
+			"parametersNames": ["device"],
+			"expression": "params.device == 'Desktop'"
+		},
+		"report": {
+			"control": "WebReports.Controls.ReportView",
+			"name": "ReportId",
+			"dataParameters": [
+				{
+					"control": "WebReports.Controls.Data.Parameter",
+					"name": "priceFixed",
+					"title": "Виды цен - target",
+					"type": "string",
+					"client": {
+						"expression": "return $.row.get('parent') == $.value"
+					},
+					"required": true
+				},{
+					"control": "WebReports.Controls.Data.Parameter",
+					"name": "detailPriceFixed",
+					"title": "Детализация цен",
+					"type": "string",
+					"client": {
+						"expression": "return $.row.get('parent') == $.value"
+					},
+					"required": true
+				}],
+			"sections": [
+				{
+					"control": "WebReports.Controls.Section",
+					"name": "section2",
+					"title": "Переключающиеся кнопки (зависимые) - фиксированный источник.",
+					"parametersContainer":{
+						"control":"WebReports.Controls.ParametersContainer",
+						"parametersNames": ["priceFixedButtonGroup", "detailFixedButtonGroup"],
+						"parameters":[{
+							"control":"WebReports.Controls.Parameters.ButtonGroup",
+							"name":"priceFixedButtonGroup",
+							"dataSourceRef": {
+								"uuid":"FixedPriceStore",
+								"version":"1.0.1"
+							},
+							"dataParameterName":"priceFixed",
+							"valueField":"id",
+							"displayField": "name",
+							"allowDepress":false
+						},{
+							"control":"WebReports.Controls.Parameters.ButtonGroup",
+							"name":"detailFixedButtonGroup",
+							"dataSourceRef":{
+								"uuid":"FixedDetailPriceStore",
+								"version":"1.0.1"
+							},
+							"dataParameterName":"detailPriceFixed",
+							"valueField":"id",
+							"displayField": "name"
+						}]
+					},
+					"dataSourcesRefs": [{ "uuid": "FixedResultPriceStore", "version": "1" }],
+					"content": {
+						"control": "WebReports.Controls.Grids.PlaneGrid",
+						"name": "grid1",
+						"band": {
+							"dataSourceRef": { "uuid": "FixedResultPriceStore", "version": "1" },
+							"columns": [
+								{ "title": "ID", "name": "id" },
+								{ "title": "Имя", "name": "name" }
+							]
+						},
+						"height": 200
+					}
+				}
+			],
+			"layout": {
+				"control": "WebReports.Controls.ReportLayout",
+				"rows": [
+					{
+						"fluid": true,
+						"cells": [
+							{
+								"span": 12,
+								"sectionName": "section2"
+							}
+						]
+					}
+				]
+			},
+			"dataSources": [ {
+				"control":"WebReports.Controls.Data.FixedDataSource",
+				"name":"FixedPriceStore",
+				"uuid":"FixedPriceStore",
+				"version":"1.0.1",
+				"columns":[
+					{
+						"name":"id",
+						"type":"int"
+					},
+					{
+						"name":"name",
+						"type":"string"
+					}
+				],
+				"fixedData":[
+					[ 1, "Розничные цены"	],
+					[ 2, "Оптовые цены"		],
+					[ 3, "Цены поставщиков"	]
+				]
+			},{
+				"control":"WebReports.Controls.Data.FixedDataSource",
+				"name":"FixedDetailPriceStore",
+				"uuid":"FixedDetailPriceStore",
+				"parameters":["priceFixed"],
+				"version":"1.0.1",
+				"columns":[
+					{
+						"name":"id",
+						"type":"int"
+					},
+					{
+						"name":"name",
+						"type":"string"
+					},
+					{
+						"name":"parent",
+						"type":"int"
+					}
+				],
+				"fixedData":[
+					[ 1, "До 50", 1 ],
+					[ 2, "До 100", 1 ],
+					[ 3, "до 200", 1 ],
+					[ 4, "до 500", 3 ],
+					[ 5, "до 600", 3 ],
+					[ 6, "до 700", 3 ],
+					[ 7, "до 1000", 2 ],
+					[ 8, "до 1500", 2 ]
+				]
+			}, {
+				"control": "WebReports.Controls.Data.FixedDataSource",
+				"name": "FixedResultPriceStore",
+				"uuid": "FixedResultPriceStore",
+				"parameters": ["detailPriceFixed"],
+				"version": "1",
+				"columns": [
+					{
+						"name": "id",
+						"type": "int"
+					},
+					{
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"name":"parent",
+						"type":"int"
+					}
+				],
+				"fixedData": [
+					[1, "Уголь А.", 1, 1],
+					[2, "Аспирин", 1, 2],
+					[3, "Анальгин", 1, 3],
+					[4, "Парацетомол", 2, 1],
+					[5, "Виагра", 3, 1],
+					[6, "Аскорбинка", 3, 2],
+					[7, "Доктор Булыжников", 4, 1],
+					[8, "Лекарство", 5, 1],
+					[9, "Настойка", 6, 1],
+					[10, "Пища", 7, 1],
+					[11, "Бактерия", 8, 1],
+					[12, "Неизвестный элемент", 9, 1]
+
+
+
+				]
+
+			}
+			],
+			"resources": {
+
+			}
+		}
+	}]
+}

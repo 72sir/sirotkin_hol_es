@@ -1,0 +1,346 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.all();
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+ <body>
+  <h1>Простейший forEach - что это за цикл и как он устроен?</h1>
+  <!-- Комментарий -->
+    <a href = "index.html">index</a>
+	<p>Так же в целях более подробного ознакомления Вы можете обратится к данному источнику <a href="https://learn.javascript.ru/array-iteration">learn.javascript.ru</a> где очень хорошо описана работа данного цикла.</p>
+	<table border="0" width="100%" align="center">
+	<tr>
+		<td>
+		<ul>
+			<a href="#one"><li>1. Создадим пустой файл <b>ReportModel.json&reportId=PrimerforEach.json</b> по первоначальному шаблону модели. </li></a><br>
+			<a href="#two"><li>2. Создадим пустой файл <b>PrimerforEach.ts</b> по первоначальному шаблону ts скрипта. Путь создания файла "ts/customControls/PrimerPrimerforEach.ts" </li></a><br>
+			<a href="#three"><li>3. Пропишем в модели исползуемый control созданого ts скрипта и в <b>ReportModel.json&reportId=PrimerforEach.json</b> в "resources": [] прописать компилированный js файл(компиляцию нашего ts скрипта). </li></a><br>
+			<a href="#four"><li>4. Зададим в модели данные, которые нам нужны для работы с циклом forEach. (В данном примере мы будем работать со статическими данными, которые строго задаются в модели.)</li></a><br>
+			<a href="#five"><li>5. Пишем цикл forEach, который выводит данные из модели на экран монитора.</li></a>
+		</ul>
+		<hr>
+		<a name="one"></a><h3>1. Шаблон модели пустого файла.</h3>
+<pre class="brush: javascript;">{
+  "control": "WebReports.Controls.Report",
+  "title": "",
+  "dataSources": [ ],
+  "dataParameters": [ ],
+  "reportViews": [
+    {
+      "condition": {
+        "parametersNames": [ "device" ],
+        "expression": "params.device == &#039;Desktop&#039;"
+      },
+      "report": {
+        "control": "WebReports.Controls.ReportView",
+        "name": "ReportId",
+        "sections": [
+          {
+            "control": "WebReports.Controls.Section",
+            "name": "mapCustomControl1",
+            "content": {}
+          }
+        ],
+        "layout": {
+          "control": "WebReports.Controls.ReportLayout",
+          "rows": [
+            {
+              "fluid": "true",
+              "cells": [
+                {
+                  "span": 12,
+                  "sectionName": "mapCustomControl1"
+                }
+              ]
+            }
+          ]
+        },
+        "dataSources": [],
+        "resources": []
+      }
+    }
+  ]
+}</pre>
+
+	<p><a name="two"></a>2. Создадим пустой файл <b>PrimerforEach.ts</b> по первоначальному шаблону <b>ts</b> скрипта. Путь создания файла <b>"ts/customControls/PrimerPrimerforEach.ts"</b></p>
+
+<pre class="brush: javascript;">
+module WebReports.Controls.Primer {
+    export class PrimerforEach extends UIComponent {
+
+        constructor() {
+            super();
+        }
+
+        public render(container: HTMLElement): void {
+            // Empty
+        }
+
+        public refresh() {
+            // Empty
+        }
+    }
+}
+</pre>
+
+	<p><a name="three"></a>3. Пропишем в модели исползуемый control созданого ts скрипта и в <b>ReportModel.json&reportId=PrimerforEach.json</b> в <b>"resources": []</b> прописать компилированный <b>js</b> 
+	файл(компиляцию нашего <b>ts</b> скрипта).</p>
+	<p>а. Пропишем в модели исползуемый <b>control</b> созданого <b>ts</b> скрипта. </p>
+<pre class="brush: javascript;">
+"content": {
+	"control": "WebReports.Controls.Primer.PrimerforEach"
+}
+</pre>
+
+<p>б. <b>ReportModel.json&reportId=PrimerforEach.json</b> в <b>"resources": []</b> прописать компилированный <b>js</b> файл(компиляцию нашего <b>ts</b> скрипта).</p>
+<pre class="brush: javascript;">
+"resources": [{
+	"uuid": "PrimerforEach_uuid_1",
+    "version": "1",
+    "filePath": "CompiledScripts/customControls/Primer/PrimerforEach.js",
+    "mimeType": "application/javascript"
+}]
+</pre>
+
+<p>Полностью файл модели будет выглядеть следующим образом.</p>
+
+<pre class="brush: javascript;">
+{
+  "control": "WebReports.Controls.Report",
+  "title": "Пример работы forEach.",
+  "dataSources": [ ],
+  "dataParameters": [ ],
+  "reportViews": [
+    {
+      "condition": {
+        "parametersNames": [ "device" ],
+        "expression": "params.device == &#039;Desktop&#039;"
+      },
+      "report": {
+        "control": "WebReports.Controls.ReportView",
+        "name": "ReportId",
+        "sections": [
+          {
+            "control": "WebReports.Controls.Section",
+            "name": "mapCustomControl1",
+            "content": {
+              "control": "WebReports.Controls.Primer.PrimerforEach"
+            }
+          }
+        ],
+        "layout": {
+          "control": "WebReports.Controls.ReportLayout",
+          "rows": [
+            {
+              "fluid": "true",
+              "cells": [
+                {
+                  "span": 12,
+                  "sectionName": "mapCustomControl1"
+                }
+              ]
+            }
+          ]
+        },
+        "dataSources": [],
+        "resources": [{
+          "uuid": "PrimerforEach_uuid_1",
+          "version": "1",
+          "filePath": "CompiledScripts/customControls/Primer/PrimerforEach.js",
+          "mimeType": "application/javascript"
+        }]
+      }
+    }
+  ]
+}
+</pre>
+
+<p><a name="four"></a>4. Зададим в модели данные, которые нам нужны для работы с циклом forEach. (В данном примере мы будем работать со статическими данными, которые строго задаются в модели.)</p>
+<br>
+Для более ясного понимания работы цикла, мы зададим в модели 2 типа массивов. String и number:
+<pre class="brush: javascript;">
+"content": {
+    "control": "WebReports.Controls.Primer.PrimerforEach",
+    "forEachString" : ["Это", "первый", "цикл", "forEach.", "Поздравляю!" ],
+    "forEachNumber" : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+}
+</pre>
+
+<p><a name="five"></a>5. Пишем цикл forEach, который выводит данные из модели на экран монитора.</p>
+<p>Первым шагом в PrimerforEach.ts нам нужно описать наши переменные, которые будут читаться из модели. </p>
+<pre class="brush: javascript;">
+declare module WebReports.Model.Primer {
+    export interface PrimerforEach extends Control {
+        forEachString: string[];
+        forEachNumber: number[];
+    }
+}
+</pre>
+<p>После чего в constructor описать испозуемую модель.</p>
+<pre class="brush: javascript;">
+constructor(private model: WebReports.Model.Primer.PrimerforEach) {
+	super();
+}
+</pre>
+
+<p>Следующим шагом мы создаем переменные и присваиваем им переменные из нашей модели.</p>
+<pre class="brush: javascript;">
+// Создадим переменные forEachString, forEachNumber и занесем в них значения из нашей модели.
+let forEachString: string[] = this.model.forEachString;
+let forEachNumber: number[] = this.model.forEachNumber;
+</pre>
+
+<p>И теперь свободно можем обрабатывать данные по средствам цикла forEach.</p>
+<pre class="brush: javascript;">
+/**
+ * Параметры:
+ * item – очередной элемент массива.
+ * i – его номер.
+ * arr – массив, который перебирается.
+ */
+
+$(container).append("&#60;div class=&#039;text-control&#039;> Выводим текстовые переменные. &#60;/div>");
+// Выводим элементы через значение item.
+forEachString.forEach(function(item) {
+	$(container).append("&#60;div class=&#039;text-control&#039;>" + item  + " &#60;/div>");
+});
+
+$(container).append("&#60;div class=&#039;text-control&#039;> <br> &#60;/div>");
+
+$(container).append("&#60;div class=&#039;text-control&#039;> Выводим цифры. &#60;/div>");
+// Выводим элементы через значение arr и i.
+forEachNumber.forEach(function(item, i, arr) {
+	$(container).append("&#60;div class=&#039;text-control&#039;>" + arr[i]  + " &#60;/div>");
+});
+$(container).append("&#60;div class=&#039;text-control&#039;> <br> &#60;/div>");
+kl
+$(container).append("&#60;div class=&#039;text-control&#039;> Выводим цифры в обратном порядке. &#60;/div>");
+// Выводим элементы через значение arr и i в обратном порядке.
+forEachNumber.forEach(function(item, i, arr) {
+	$(container).append("&#60;div class=&#039;text-control&#039;>" + arr[(arr.length - 1) - i]  + " &#60;/div>");
+});
+
+$(container).append("&#60;div class=&#039;text-control&#039;> <br> &#60;/div>");
+
+$(container).append("&#60;div class=&#039;text-control&#039;> Выводим значения в строчку. &#60;/div>");
+let numberStr: string[] = [];
+forEachString.forEach(function(item, i, arr) {
+	numberStr[i] = item;
+});
+$(container).append("&#60;div class=&#039;text-control&#039;>" + numberStr.toString()  + " &#60;/div>");
+</pre>
+
+<p>Полностью файл PrimerforEach.ts будет выглядеть следующим образом.</p>
+<pre class="brush: javascript;">
+declare module WebReports.Model.Primer {
+    export interface PrimerforEach extends Control {
+        forEachString: string[];
+        forEachNumber: number[];
+    }
+}
+module WebReports.Controls.Primer {
+    export class PrimerforEach extends UIComponent {
+
+        constructor(private model: WebReports.Model.Primer.PrimerforEach) {
+            super();
+        }
+
+        public render(container: HTMLElement): void {
+            // Создадим переменные forEachString, forEachNumber и занесем в них значения из нашей модели.
+            let forEachString: string[] = this.model.forEachString;
+            let forEachNumber: number[] = this.model.forEachNumber;
+
+            /**
+             * Параметры:
+             * item – очередной элемент массива.
+             * i – его номер.
+             * arr – массив, который перебирается.
+             */
+
+            $(container).append("&#60;div class=&#039;text-control&#039;> Выводим текстовые переменные. &#60;/div>");
+            // Выводим элементы через значение item.
+            forEachString.forEach(function(item) {
+                $(container).append("&#60;div class=&#039;text-control&#039;>" + item  + " &#60;/div>");
+            });
+            $(container).append("&#60;div class=&#039;text-control&#039;> <br> &#60;/div>");
+
+            $(container).append("&#60;div class=&#039;text-control&#039;> Выводим цифры. &#60;/div>");
+            // Выводим элементы через значение arr и i.
+            forEachNumber.forEach(function(item, i, arr) {
+                $(container).append("&#60;div class=&#039;text-control&#039;>" + arr[i]  + " &#60;/div>");
+            });
+            $(container).append("&#60;div class=&#039;text-control&#039;> <br> &#60;/div>");
+
+            $(container).append("&#60;div class=&#039;text-control&#039;> Выводим цифры в обратном порядке. &#60;/div>");
+            // Выводим элементы через значение arr и i в обратном порядке.
+            forEachNumber.forEach(function(item, i, arr) {
+                $(container).append("&#60;div class=&#039;text-control&#039;>" + arr[(arr.length - 1) - i]  + " &#60;/div>");
+            });
+
+            $(container).append("&#60;div class=&#039;text-control&#039;> <br> &#60;/div>");
+
+            $(container).append("&#60;div class=&#039;text-control&#039;> Выводим значения в строчку. &#60;/div>");
+            let numberStr: string[] = [];
+            forEachString.forEach(function(item, i, arr) {
+                numberStr[i] = item;
+            });
+            $(container).append("&#60;div class = 'text-control'>" + numberStr.toString()  + " &#60;/div>");
+
+        }
+
+        public refresh() {
+            // Empty
+        }
+    }
+}
+
+</pre>
+
+		</td>
+	</tr>
+	</table>
+	
+	<center><img src="pic/forEach.png" alt="Цикл forEach."></center>
+	
+	<br>
+	<br>
+	<center><a href= "projects/forEach_1.rar"> Файлы проекта можно скачать здесь. </a></center>
+	<br>
+	<br>
+	<b>Note</b>: Если в данном уроке будет что то не ясно, то Вы с легкостью можете найти множества полезной литературы по данной теме. 
+	Работа данного цикла замечательно описана в учебниках по javascript и так же имеется множество различных примеров в интеренете. Успехов!
+	<br>
+	<br>
+	<center> <b>Сделал прогу! ПРОГРУНТИ!</b> </center>
+	<br>
+	<br>
+ </body>
+</html>

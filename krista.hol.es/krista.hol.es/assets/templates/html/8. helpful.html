@@ -1,0 +1,178 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.all();
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+ <body>
+  <h1>Полезная информация.</h1>
+  <!-- Комментарий -->
+  <a href = "index.html">index</a>
+	<table border="0" width="100%" align="center">
+		<tr>
+			<td>
+				<h2>Благодаря данной конструкции можно вывести значения переменныx на страничку.</h2>
+				<pre class="brush: c-sharp;">
+					$(containerMap).append("&#60;div class='text-control'>"  +  value + " - " + name + " &#60;/div>");					
+				</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<hr>
+			<h2>Зачем обворачивать выводимый русский текст в <b>gettext()</b>?<br></h2>
+				<p>					
+					<b>gettext()</b> - это локализация текста, для того, что бы на различых устройствах и различных языковых параметрах, выводились надписи на нужном языке.<br>
+					Пример с переменной <b>text</b>, зададим в ней параметр текста через  <b>gettext()</b>:
+				</p>
+				<pre class="brush: c-sharp;">text: gettext("Россия") || gettext(that.model.subtitle.text)</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<hr>
+			<h2>Как подключить скрипт в нужном месте и в нужное время?<br></h2>
+				<p>
+					Имеется 2 метода, как можно подключить скрипты.<br><br>
+					Первый метод подключить через <b>"resources": []</b> в модели.
+					
+					<b>При выборе методов лучше пользоваться данным методом. </b>
+					<br> 
+					<div align="justify">
+					Скрипт не начнет выполнятся до тех пор, пока все скрепты из <b>"resources": []</b> не прогрузятся. Cкрипт будет подцеплен к старнице автоматически, его не нужно нкиак обрабатывать, 
+					единственное, что может потребоваться, это добавить файлик *.d.ts который будет содержать типы для используемого скрипта, чтобы не было ошибок при линте грунта.
+					</div>
+					<br>
+					Так же нужно учесть соблюдения подключаемых скриптов, если в этом есть смысл, то и в модели нужно это предусмотреть. Подключая в том же порядке.
+					<br><br>
+					<b>1.</b> Подключить в <b>"resources": []</b> в модели: 
+				</p>
+				<pre class="brush: c-sharp;">
+				"resources": [
+				{
+					"uuid": "highmaps_min_uuid_3",
+					"version": "1",
+					"filePath": "data/resources/maps/highmaps/lib/map.js",
+					"mimeType": "application/javascript"
+				}, {
+					"uuid": "highmaps_min_uuid_3",
+					"version": "1",
+					"filePath": "data/resources/maps/highmaps/lib/drilldown.min.js",
+					"mimeType": "application/javascript"
+				}]					
+				</pre>
+				
+				<p>
+					<br>
+					<hr>
+					Иногда бывают задачи, когда скрипт нужно грузить в определенный момент при работе кода, для этого имеется метод номер 2:<br>
+					<b>2.</b> С помощью <b>Ext.Loader.loadScript({ /** Ваш код */})</b>:
+					<pre class="brush: c-sharp;">
+                    Ext.Loader.loadScript({
+						url: "http:&#8260;&#8260;sirotkin/src/data/resources/maps/highmaps/us-all_Rus.js",
+						onLoad: () => {
+						/** В переменную data грузим данные нашего скрипта и передаем в функцию createStyleTextGeneralMap. */
+
+						let data = Highcharts.geojson(Highcharts.map["all/Rus"]);
+
+                        that.createStyleTextGeneralMap(data);
+                        },
+                        onError: function () {
+                            var err = gettext("Ошибка при загрузке  - drilldown.min.js, проверьте соединение с интернетом.");
+                            ReportContainer.registerError(err, that);
+                            that.onAfterRender.Trigger(that.getId());
+                        }
+                    });					
+					</pre>
+				</p>
+				<hr>
+				<h2>report.dev.html</h2>
+				<h3>src/report.dev.html</h3>
+				<p>
+					В данном файле находятся все <b>js</b> скрипты, которые грузятся во фронтенде. Это необходимов в том случае, если какие то скрипты 
+					используются постоянно. И что бы убрать необходимость их прописывать в <b>resources</b> модели или грузить в коде скрипта. Описывают в данном файле.
+				</p>
+				<hr>
+				<h2>Временное хранилище файлов.</h2>
+				<h3>src/data/resources</h3>
+				<p>
+					В данном подкаталоге, можно создать свою папку и в ней располагать файлы, которые необходимы при отладке кода и являются лишними для фронтенда в данное время.
+					<br>
+					Это необходимо, что бы во фронтенде убирать файлы, которые очень редко используются. И не засорять его не нужной информацией.
+				</p>
+				<hr>
+				<h2>Постоянное хранилище файлов.</h2>
+				<h3>src/assets/vendor</h3>
+				<p>
+					В данном подкаталоге, можно создать свою папку и в ней располагать файлы, которые необходимы для работы фронтенда.
+				</p>
+				<hr>
+				<h2>Как работать с картинками через "resources" в модели:</h2>
+				<h3>Первым шагом опишем используемые картинки:</h3>
+				<pre class="brush: c-sharp;">
+					"resources": [{
+						"uuid": "sunuuid1",
+						"version": "1",
+						"filePath": "http://highcharts.com/demo/gfx/sun.png",
+						"mimeType": "image/png"
+					}, {
+						"uuid": "snowuuid1",
+						"version": "1",
+						"filePath": "http://highcharts.com/demo/gfx/snow.png",
+						"mimeType": "image/png"
+					}]
+				</pre>
+				<p></p>
+				<h3>Далее в <b>ts</b> скрипте обращаемся к картинкам по следующему алгоритму:</h3>
+				<pre class="brush: c-sharp;">
+					WebReports.globals.host.getResourceUrl(this.model.mapImages[i])
+				</pre>
+				<h3>Так же в модели в данном примере в тек <b>"content" :</b> вносим данные на картинки и после обращения к данному данному тегу получаем картинки:</h3>
+				<pre class="brush: c-sharp;">
+				"mapImages": [
+				{
+                    "uuid": "snow_uuid_1",
+                    "version": "snow_version_1",
+                    "filePath": "http://highcharts.com/demo/gfx/snow.png"
+                }, {
+                    "uuid": "sun_uuid_1",
+                    "version": "sun_version_1",
+                    "filePath": "http://highcharts.com/demo/gfx/sun.png"
+                }]				
+				</pre>
+				<p></p>
+				<hr>
+
+				
+			</td>
+		</tr>
+	</table>
+ </body>
+</html>

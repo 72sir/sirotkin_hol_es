@@ -1,0 +1,108 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.all();
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+ <body>
+  <h1>Работаем с ошибками.</h1>
+  <!-- Комментарий -->
+  <p>Работаем с ошибками.</p>
+	<table border="0" width="100%" align="center">
+	<tr>
+		<td>
+		
+Основные ошибки:
+<br><br>
+<b>
+Error:(244, 63) TS2345: Argument of type '{ chart: { events: { drilldown: (e: any) => void; drillup: () => void; }; }; colorAxis: { dataCla...' is not assignable to parameter of type '(chart: HighchartsChartObject) => void'.
+</b>
+<br><br>
+Данную ошибку пока не решил
+<pre>
+Данная ошибка образовалась из за отсутствия типов описанных в JS скрипте и d.ts библиотеке. 
+Исправляется это все довольно просто, описанием используемых типов в ручную. Первым делом нужно вычислить методом перебора какие типы вызывают ошибку 
+а какие нет, после чего по примеру типов в которых нет ошибок, описать ошибочные типы. То есть нажимем Ctrl и указываем на нашу переменную
+если она имеется в нашем d.ts файле все ок. Если нет прописываем так же как там прописаны остальные. 
+
+Третья часть ошибки. Это отсутствие под свойствост в переменной:
+<pre class="brush: c-sharp;">
+legend: {
+	itemStyle: {
+		fontWeight:     fontWeightbufstr,
+        //fontStyle:      fontStylebufstr,
+        color:          colorbufstr,
+        fontSize:       itemStylefontSizebufstr
+        //textDecoration: textDecorationbufstr
+	},
+}
+</pre>Как оказалось в типе HighchartsCSSObject. Жмем Ctrl и кликаем на тип переменой. <br>
+Переходя до свойства HighchartsCSSObject где и не оказалось наших переменых, вызывавших ошибку.
+<pre class="brush: c-sharp;">
+interface HighchartsOptions {     legend?: HighchartsLegendOptions; ...... }
+
+interface HighchartsLegendOptions {     itemStyle?: HighchartsCSSObject; ...... }
+
+interface HighchartsCSSObject {
+    background?: string;
+    border?: string;
+    color?: string;
+    cursor?: string;
+    font?: string;
+    fontSize?: string;
+    fontWeight?: string;
+    left?: string;
+    opacity?: number;
+    padding?: string | number;
+    position?: string;
+    top?: string;
+    textShadow?: string;
+}
+
+//fontStyle:      fontStylebufstr,
+//textDecoration: textDecorationbufstr
+</pre><b>Unable to create object of class WebReports.Controls.Maps.Highmaps.HMapLegend. (TypeError).: WebReports.Controls.Maps.Highmaps.HMapLegend is not a function</b>
+
+Ошибка была в нескольких местах
+<pre class="brush: c-sharp;">
+module WebReports.Controls.Maps.Highmaps.legend { .... }
+declare module WebReports.Model.Maps.Highmaps.legend { ... }
+constructor(private model: WebReports.Model.Maps.Highmaps.legend.HMapLegend, args: any) {super();}
+</pre>Изменив каталог основного скрипта, переместив его вверх на одну папку забыл изменить путь - все должно выглядеть так 
+<pre class="brush: c-sharp;">
+module WebReports.Controls.Maps.Highmaps { .... }
+declare module WebReports.Model.Maps.Highmaps { ... }
+constructor(private model: WebReports.Model.Maps.Highmaps.HMapLegend, args: any) {super();}
+</pre>
+		</td>
+	</tr>
+	</table>
+ </body>
+</html>

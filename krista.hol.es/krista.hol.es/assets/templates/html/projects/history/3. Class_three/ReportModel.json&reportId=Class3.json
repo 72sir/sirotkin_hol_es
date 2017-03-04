@@ -1,0 +1,65 @@
+{
+  "control": "WebReports.Controls.Report",
+  "title": "Пример",
+  "dataSources": [ ],
+  "dataParameters": [ ],
+  "reportViews": [
+    {
+      "condition": {
+        "parametersNames": [ "device" ],
+        "expression": "params.device == 'Desktop'"
+      },
+      "report": {
+        "control": "WebReports.Controls.ReportView",
+        "name": "ReportId",
+        "sections": [
+          {
+            "control": "WebReports.Controls.Section",
+            "name": "mapCustomControl1",
+            "content": {
+              "control": "WebReports.Controls.Primer.Class",
+              "repeatClass": {
+                "control": "WebReports.Controls.Primer.RepeatClass"
+              }
+            }
+          }
+        ],
+        "layout": {
+          "control": "WebReports.Controls.ReportLayout",
+          "rows": [
+            {
+              "fluid": "true",
+              "cells": [
+                {
+                  "span": 12,
+                  "sectionName": "mapCustomControl1"
+                }
+              ]
+            }
+          ]
+        },
+        "dataSources": [],
+        "resources": [
+          {
+            "uuid": "Class_uuid_1",
+            "version": "1",
+            "filePath": "CompiledScripts/customControls/Primer/Class.js",
+            "mimeType": "application/javascript"
+          },
+          {
+            "uuid": "RepeatClass_uuid_1",
+            "version": "1",
+            "filePath": "CompiledScripts/customControls/Primer/RepeatClass.js",
+            "mimeType": "application/javascript"
+          },
+          {
+            "uuid": "CommonClass_uuid_1",
+            "version": "CommonClass_version_1",
+            "filePath": "CompiledScripts/customControls/Primer/Utils/Common.js",
+            "mimeType": "application/javascript"
+          }
+        ]
+      }
+    }
+  ]
+}

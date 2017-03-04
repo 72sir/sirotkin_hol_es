@@ -1,0 +1,197 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.all();
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Индикация</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+ <body>
+  <h1>Индикация - основные свойства.</h1>
+  <!-- Комментарий -->
+    <a href = "index.html">index</a>
+  <p></p>
+	<table border="0" width="100%" align="center">
+	<tr>
+		<td>
+		<h2>Индикация на примере карт leaflet.</h2>
+		<h3>Опишем индикацию в модели.</h3>
+		<pre class="brush: c-sharp;">
+                        "layerIndicators": [{
+                        	"indicator": {
+	                            "control": "WebReports.Controls.Indicators.Format",
+	                            "name": "colorIndicator",
+	                            "description": "Раскраска",
+	                            "expression": "return $.ctx.rangeNumber",
+	                            "cases": [
+	                            {
+	                                "key": 0,
+	                                "backgroundColor": {
+	                                    "color": "color0",
+	                                    "colorSet":"colorForIncomesWidget",
+	                                    "alpha": 0.1
+	                            	}
+	                            }, {
+	                                "key": 1,
+	                                "backgroundColor": {
+	                                    "color": "color0",
+	                                    "colorSet":"colorForIncomesWidget",
+	                                    "alpha": 0.2
+	                                }
+	                            }, {
+	                                "key": 2,
+	                                "backgroundColor": {
+	                                    "color": "color0",
+	                                    "colorSet":"colorForIncomesWidget",
+	                                    "alpha": 0.3
+	                                }
+	                            }, {
+	                                "key": 3,
+	                                "backgroundColor": {
+	                                    "color": "color0",
+	                                    "colorSet":"colorForIncomesWidget",
+	                                    "alpha": 0.4
+	                                }
+	                            }, {
+	                                "key": 4,
+	                                "backgroundColor": {
+	                                    "color": "color0",
+	                                    "colorSet":"colorForIncomesWidget",
+	                                    "alpha": 0.5
+	                                }
+	                            }, {
+	                                "key": 5,
+	                                "backgroundColor": {
+	                                    "color": "color0",
+	                                    "colorSet":"colorForIncomesWidget",
+	                                    "alpha": 0.7
+	                                }
+	                            }, {
+	                                "key": 6,
+	                                "backgroundColor": {
+	                                    "color": "color0",
+	                                    "colorSet":"colorForIncomesWidget",
+	                                    "alpha": 0.95
+	                                }
+	                            }]
+	                        },
+	                        "indicatorFieldName": "mbt",
+	                        "divisionOnIntervalsType": 0,
+	                        "name": "test",
+	                        "legend": {
+		                        "control": "WebReports.Controls.Maps.Leaflet.Legend",
+		                        "position": 3,
+		                        "title": {
+		                        	"control": "WebReports.Controls.Text.HandlebarsText",
+		                            "text": "__Данные за {{report.parameters.paramYear}} год__",
+		                            "markup": {
+		                              "control": "WebReports.Controls.Text.Markup.MarkedProcessor"
+		                            },
+		                            "template": {
+		                              "control": "WebReports.Controls.Text.Templaters.HandlebarsTemplate"
+		                            }
+		                            },
+		                        "item": {
+		                          "control": "WebReports.Controls.Maps.Leaflet.LegendItem",
+		                          "itemText": {
+		                            "control": "WebReports.Controls.Text.HandlebarsText",
+		                            "text": "от __{{format '0,0.00' beginValue}}__ до __{{format '0,0.00' endValue}}__",
+		                            "markup": {
+		                              "control": "WebReports.Controls.Text.Markup.MarkedProcessor"
+		                            },
+		                            "template": {
+		                              "control": "WebReports.Controls.Text.Templaters.HandlebarsTemplate"
+		                            }
+		                          }
+	                        	}
+	                    	}
+                        }]
+		</pre>
+		
+		<h2></h2>
+		<h3>Рассмотрим как она описана в <b>ts</b> скрипте.</h3>
+		<pre class="brush: c-sharp;">
+        /* Применение индикатора. */
+        private applyIndicator(modifierModel: Model.Maps.LayerIndicator, row: IDataSourceRow,
+            layer: L.GeoJSON, rangeColection: collections.Dictionary&#60;number, any>): any {
+            // TODO: надо как то из feature доставать свойства Path Options, пока берем дефолтный.
+            var layerFillColor = (&#60;any>layer).options ? (&#60;any>layer).options.fillColor : undefined;
+            var data = &#60;IIndicatorSvgData>{
+                // Тернарная_условная_операция.
+                fillColor: layerFillColor ? layerFillColor : this.defaultFeatureStyle.fillColor
+            };
+            var vizualizer = new WebReports.Controls.Indicators.Vizualizers.SvgVizualizer(data);
+            this.addChildComponent(vizualizer, this);
+            var rangeNumber = this.getRangeNumber(row.get(modifierModel.indicatorFieldName), rangeColection);
+            (&#60;IIndicator>ControlFactory.create(modifierModel.indicator)).apply(row, $.extend(this.getExpressionContext(),
+                { rangeNumber: rangeNumber }), vizualizer);
+            if (data.url) {
+                var icon = new L.Icon({
+                    iconUrl: data.url,
+                    iconAnchor: new L.Point(12, 12)
+                });
+                new L.Marker(layer.getCenter(), { icon: icon }).addTo(this.map);
+            }
+            if (data.linkObject) {
+                layer.on("dblclick", (e: any) => {
+                    this.zoomToFeature(e, this.map);
+                    data.linkObject.action();
+                });
+            }
+            if (data.displayValue) {
+                new L.CircleMarker(layer.getCenter(), { radius: 0 })
+                    .bindLabel(data.displayValue, { noHide: true, direction: "right" })
+                    .addTo(this.map);
+            }
+            return {
+                fillColor: data.fillColor,
+                fillOpacity: 1,
+                color: "#fff"
+            };
+        }
+		</pre>
+		<h3>Типы данных, которые участвуют в реализации контрола &#60;IIndicatorSvgData>.</h3>
+		<pre class="brush: c-sharp;">
+		/** "Контекст" отображаемого значения для визуализации индикатора с помощью SVG. */
+		export interface IIndicatorSvgData extends IFormatterData {
+			url: string;
+			fillColor: string;
+			linkObject: Controls.Actions.LinkAction;
+			offsetX: number;
+			offsetY: number;
+		}		
+		</pre>
+		
+		
+		
+		
+		</td>
+	</tr>
+	</table>
+ </body>
+</html>

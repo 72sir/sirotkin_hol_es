@@ -1,0 +1,146 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.all();
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+ </head>
+ <body>
+  <h1>Настройка среды разработки</h1>
+  <!-- Комментарий -->
+  <a href = "index.html">index</a>
+	<table border="1" width="100%" align="center">
+	<tr>
+		<td>	
+<hr>
+1) Настройка среды разработчика <a href="http://fmredmine.krista.ru/projects/acr/wiki/%D0%9D%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0_%D1%81%D1%80%D0%B5%D0%B4%D1%8B_%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B8">http://fmredmine.krista.ru/projects/acr/wiki</a><br>
+<br>
+Устанавливаем черепаху, настраивай Node.js и typescript.
+<br>
+При установке set proxy вводим логин и пароль
+<br>
+<b>npm config set proxy ... </b>
+<br><br>
+2) Выкачивай «Репозиторий фронтенда»:
+<br>
+http://fmredmine.krista.ru/projects/acr/wiki/RepositoryList
+<br>
+логин и пароль доменные
+<br><br>
+3) Ставь IDE WebStorm (инструкция и ссылка придет отдельным письмом)
+<br><br>
+4) Настрой локальный сайт на IIS, сгрунти и запусти «песочницу» с примерами. (Информацию ищем в интернете.)
+<br>
+<hr>
+		<h3>Ссылка на грунт.</h3>
+			<a href="http://frontender.info/grunt-is-not-weird-and-hard/">http://frontender.info/grunt-is-not-weird-and-hard/</a>
+			<hr>
+
+		<p>
+Если при работе с WebStorm  у вас подвисает интерфейс при том что на Вашем компьютере установленно оперативы больше 2 Гигабайт. 
+Вам следует зайти в папку с установленной программой по умолчанию это путь (C:\Program Files (x86)\JetBrains\WebStorm 143.870.2\bin) 
+найти там файл (WebStorm.exe) открыть его с помощью текстового редактора и в нем исправить строчку <br>
+<br>
+-Xms128m<br>
+-Xmx<b>512m</b><br>
+-XX:MaxPermSize=250m
+<br><br>
+И исправить значение 512 минимум на 1024. После чего тормоза исчезнут.
+<br><br>
+-Xms128m<br>
+-Xmx<b>1024m</b><br>
+-XX:MaxPermSize=250m<br>
+<br><br>
+Добавляем в файл и сохраняем.
+<hr>
+<h2>Комментарии</h2>
+<p>Данный тип комментариев нужно использовать во вне обьектов. В главных функциях.</p>
+<pre class="brush: c-sharp;">
+/**
+ * Комментарии вида.
+ */
+</pre>
+<h3>Пример:</h3>
+<pre class="brush: c-sharp;">
+public refresh(container: HTMLElement) {
+   /** 
+	* Первый тип комментариев.
+	*/
+}
+</pre>
+
+<h3>Используются внутри обьектов.</h3>
+<pre class="brush: c-sharp;">
+// Комментарии данного вида.
+</pre>
+<h3>Пример:</h3>
+<pre class="brush: c-sharp;">
+public refresh(container: HTMLElement) {
+   /** 
+	* Используем первый тип комментариев.
+	*/
+	if (this.value > 1) {
+		// Здесь уже используется второй тип комментариев.
+	}
+}
+</pre>
+<hr>
+<h3>"layout"</h3>
+<p>
+	При создании контрола, желательно использовать только высоту контейнера. В этом случае, контрол будет использовать 100% ширины и должен изменяться в зависимости от ширины браузера.
+	<br><br>
+	Когда контрол создается он имеет примерно 12 секций в ширину, которые мы можем определять что бы располагать в них те или иные контролы(графики, меню и тд.).
+	<br><br>
+	<a href="http://localhost/src/Report.dev.html?reportId=6&version=1&device=Desktop">Пример</a>
+</p>
+<pre class="brush: c-sharp;">
+"layout": {
+	"control": "WebReports.Controls.ReportLayout",
+	"rows": [{
+		"fluid": "true",
+        "cells": [{
+			"span": 12,
+            "sectionName": "mapCustomControl1"
+        }]
+    }]
+},
+</pre>
+<center><a href="pic/width.png"><img src = "pic/width.png"></a></center>
+<br>
+<br>
+<br>
+<br>
+
+
+		</p>
+		</td>
+	</tr>
+	</table>
+ </body>
+</html>

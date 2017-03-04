@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<title>Django</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+	<link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="blog.css" rel='stylesheet' type='text/css'>
+</head>
+<body>
+	<div class="page-header">
+		<a href="/"><div class="date" style="">На главную</div></a>
+		<h1><a href="/django/index.html">Create new light the blog</a></h1>
+	</div>
+	<div class="content container">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="post">	
+					<h2><pre><code>(myvenv) C:\Users\Name\djangogirls&gt; django-admin startproject mysite . </code></pre></h2>
+					<hr/>
+					<h2><code>(myvenv) ~/django$ python manage.py startapp blog</code></h2>
+
+					<hr/>
+					<pre><code class="lang-python">
+					INSTALLED_APPS = (
+						...
+
+						<span class="hljs-string">'blog'</span>,
+					)
+					</code></pre>
+					<hr/>
+					<h2>blog/models.py</h2>
+
+					<pre>
+					<code class="lang-python"><span class="hljs-keyword">from</span> django.db <span class="hljs-keyword">import</span> models
+					<span class="hljs-keyword">from</span> django.utils <span class="hljs-keyword">import</span> timezone
+
+
+					<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Post</span><span class="hljs-params">(models.Model)</span>:</span>
+						author = models.ForeignKey(<span class="hljs-string">'auth.User'</span>)
+						title = models.CharField(max_length=<span class="hljs-number">200</span>)
+						text = models.TextField()
+						created_date = models.DateTimeField(
+								default=timezone.now)
+						published_date = models.DateTimeField(
+								blank=<span class="hljs-keyword">True</span>, null=<span class="hljs-keyword">True</span>)
+
+						<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">publish</span><span class="hljs-params">(self)</span>:</span>
+							self.published_date = timezone.now()
+							self.save()
+
+						<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__str__</span><span class="hljs-params">(self)</span>:</span>
+							<span class="hljs-keyword">return</span> self.title
+					</code></pre>
+					<hr/>
+						<pre><code>(myvenv) ~/djangogirls$ python manage.py makemigrations blog</code></pre>
+						<pre><code>(myvenv) ~/djangogirls$ python manage.py migrate blog</code></pre>
+						<pre><code>(myvenv) ~/djangogirls$ python manage.py migrate --run-syncdb blog</code></pre>
+					<hr/>
+					<h2>blog/admin.py</h2>
+					<pre>
+					<code class="lang-python"><span class="hljs-keyword">from</span> django.contrib <span class="hljs-keyword">import</span> admin
+					<span class="hljs-keyword">from</span> .models <span class="hljs-keyword">import</span> Post
+					
+					admin.site.register(Post)
+					</code></pre>
+					<hr/>
+
+					<pre><code>
+					(myvenv) ~/djangogirls$ python manage.py createsuperuser
+					Username: admin
+					Email address: admin@admin.com
+					Password:
+					Password (again):
+					Superuser created successfully.
+					</code></pre>
+
+					<hr/>
+						<h2><a href="http://127.0.0.1:8000/admin/">http://127.0.0.1:8000/admin/</a></h2>
+					<hr/>
+						<img src="https://tutorial.djangogirls.org/ru/django_admin/images/login_page2.png"/>
+					<hr/>
+						<img src="https://tutorial.djangogirls.org/ru/django_admin/images/django_admin3.png"/>
+					<hr/>
+						<img src="https://tutorial.djangogirls.org/ru/django_admin/images/edit_post3.png"/>
+					<hr/>
+					<h2>mysite/urls.py</h2>
+					<pre>
+					<code class="lang-python"><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> include, url
+					<span class="hljs-keyword">from</span> django.contrib <span class="hljs-keyword">import</span> admin
+
+					urlpatterns = [
+						url(<span class="hljs-string">r'^admin/'</span>, include(admin.site.urls)),
+						url(<span class="hljs-string">r''</span>, include(<span class="hljs-string">'blog.urls'</span>)),
+					]
+					</code></pre>
+					<hr/>
+					<h2>blog/urls.py</h2>
+					<pre>
+						<code class="lang-python"><span class="hljs-keyword">from</span> django.conf.urls <span class="hljs-keyword">import</span> url
+						<span class="hljs-keyword">from</span> . <span class="hljs-keyword">import</span> views</code></pre>
+					<pre>
+					<code class="lang-python">urlpatterns = [
+						url(<span class="hljs-string">r'^$'</span>, views.post_list, name=<span class="hljs-string">'post_list'</span>),
+					]
+					</code></pre>
+					<hr/>
+					<h2>blog/views.py</h2>
+
+					<pre>
+					<code class="lang-python"><span class="hljs-keyword">from</span> django.shortcuts <span class="hljs-keyword">import</span> render
+					<span class="hljs-keyword">from</span> django.utils <span class="hljs-keyword">import</span> timezone
+					<span class="hljs-keyword">from</span> .models <span class="hljs-keyword">import</span> Post
+
+					<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">post_list</span><span class="hljs-params">(request)</span>:</span>
+						posts = Post.objects.filter(published_date__lte=timezone.now()).order_by(<span class="hljs-string">'published_date'</span>)
+						<span class="hljs-keyword">return</span> render(request, <span class="hljs-string">'blog/post_list.html'</span>, {<span class="hljs-string">'posts'</span>: posts})
+					</code></pre>
+
+					<hr/>
+					<h2>blog/templates/blog/post_list.html</h2>
+
+					<pre>
+					<code class="lang-html">    {% load staticfiles %}
+						<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+							<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+								<span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Django Girls blog<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+								<span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"</span>&gt;</span>
+								<span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"</span>&gt;</span>
+								<span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"{% static 'css/blog.css' %}"</span>&gt;</span>
+							<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+							<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+								<span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+									<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/"</span>&gt;</span>Django Girls Blog<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+								<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+								{% for post in posts %}
+									<span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+										<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>published: {{ post.published_date }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+										<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">""</span>&gt;</span>{{ post.title }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+										<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{{ post.text|linebreaksbr }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+									<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+								{% endfor %}
+							<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+						<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+					</code>
+					</pre>
+					<hr/>
+				</div>					
+			</div>
+		</div>
+	</div>
+</body>
+</html>

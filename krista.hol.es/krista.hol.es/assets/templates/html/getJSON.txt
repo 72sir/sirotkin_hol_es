@@ -1,0 +1,69 @@
+// leaflet/Layer.ts           
+		   $.getJSON(layerUrl, (data) => {
+                var markers: L.MarkerClusterGroup = markerClustering
+                    ? new L.MarkerClusterGroup(
+                        { maxClusterRadius: 110, spiderfyOnMaxZoom: false, showCoverageOnHover: false})
+                    : null;
+                new L.TopoJSON(data)
+                    .addTo(map)
+                    .eachLayer((layer: L.GeoJSON) => {
+                        // всплывашки
+                        if (layerModel.popup) {
+                            var popup = (<Popup>ControlFactory.create(layerModel.popup, this.contextProvider,
+                                this.dataSource, this.model.codeColumn));
+                            this.addChildComponent(popup, this);
+                            popup.render(layer);
+                        }
+                        if (layerModel.selectionStyle) {
+                            this.bindSelectionEvent(layer, layerModel.selectionStyle);
+                        }
+                        // позиционирование
+                        if (model.zoomToFeature && model.interaction) {
+                            layer.on("click", (e: any) => {
+                                this.zoomToFeature(e, map);
+                            });
+                        }
+                        // подписи
+                        if (layerModel.label) {
+                            var label = (<Label>ControlFactory.create(layerModel.label, this.contextProvider, markers));
+                            this.addChildComponent(label, this);
+                            label.render(layer, this.map);
+                        }
+                        // применяем индикаторы
+                        if (layerModel.layerIndicators) {
+                            layerModel.layerIndicators.forEach((layerIndicator: Model.Maps.LayerIndicator) => {
+
+                                var row = this.getFeatureRow(this.dataSource, layer.feature.properties.CODE);
+                                if (row) {
+                                    layer.setStyle(this.applyIndicator(layerIndicator, row, layer,
+                                        this.layersCollection.getValue(layerIndicator.name)));
+                                } else {
+                                    (<L.ExtendedGeoJSON>layer).setStyle({
+                                        fillColor: this.defaultFeatureStyle.fillColor,
+                                        fillOpacity: 1,
+                                        color: "#fff"
+                                    });
+                                }
+                            });
+                        } else {
+                            (<L.ExtendedGeoJSON>layer).setStyle({
+                                fillColor: this.defaultFeatureStyle.fillColor,
+                                fillOpacity: 1,
+                                color: "#fff"
+                            });
+                        }
+                    });
+
+                // сообщаем что слой с картой и надстройками загружен
+                this.onTemplateReadyEvent(this.getId());
+                if (markers) {
+                    this.map.addLayer(markers);
+                    // TODO: не правильно кластеризуются маркеры при загрузке
+                    // Путем зумирования до максимального и минимального они начинают работать правильно.
+                    // Стандартного средства для правильного зумирования не нашел.
+                    this.map.setZoom(this.map.getMaxZoom());
+                    this.map.setZoom(this.map.getMinZoom());
+                    this.map.setZoom(this.map.getMaxZoom());
+                    this.map.setZoom(Math.round(layerModel.zoom));
+                }
+            });

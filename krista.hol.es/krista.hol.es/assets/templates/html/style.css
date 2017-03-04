@@ -1,0 +1,24 @@
+
+  table { 
+    width: 95%; /* Ширина таблицы */
+    border: 0px; /* Рамка вокруг таблицы */
+    border-collapse: collapse; /* Отображать только одинарные линии */
+   }
+   th { 
+    text-align: left; /* Выравнивание по левому краю */
+    background: #ccc; /* Цвет фона ячеек */
+    padding: 5px; /* Поля вокруг содержимого ячеек */
+    border: 0px solid black; /* Граница вокруг ячеек */
+   }
+   td { 
+    padding: 5px; /* Поля вокруг содержимого ячеек */
+    border: 0px solid black; /* Граница вокруг ячеек */
+   }
+   ol {
+    list-style-type: upper-alpha; /* Заглавные буквы */
+   }
+     ul {
+    margin-top: 2; /* Отступ сверху */
+    margin-bottom: 2; /* Отступ снизу */
+    
+   }

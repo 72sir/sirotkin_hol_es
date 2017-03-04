@@ -1,0 +1,134 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.all();
+    </script>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title></title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+ <body>
+  <h1>Работаем с классом.</h1>
+  <!-- Комментарий -->
+    <a href = "index.html">index</a>
+	<table border="0" width="100%" align="center">
+	<tr>
+		<td>
+			<h2>Создадим файлы во фронтенде:</h2>
+			<ul>
+                <li><b>src/ts/customControls/Maps/Highmaps/HMaps.ts</b></li>
+                <li><b>src/data/Meta/ReportModel.json&reportId=HMaps.json</b></li>
+            </ul>
+		<p>Алгоритм работы довольно простой. В <b>render</b> описываем обращение к классу, а в самом классе описываем обращение к контролу и текстовым данным описанным в модели. </p>
+		<h3>HMaps.ts</h3>
+<pre class="brush: c-sharp;">
+declare module WebReports.Model.Maps.Highmaps {
+    export interface HMaps extends Control {
+        textView: Text;
+    }
+}
+module WebReports.Controls.Maps.Highmaps {
+    export class HMaps extends UIComponent {
+        constructor(private  model: WebReports.Model.Maps.Highmaps.HMaps) {
+            super();
+        }
+        public render(container: HTMLElement) {
+            return this.createLegend(container);
+        }
+        private createLegend(container: HTMLElement): void {
+            var textView = (&#60;IUIComponent>ControlFactory.create(this.model.textView, this));
+            this.addChildComponent(textView, this);
+            textView.render(container);
+        }
+        public refresh() {
+            // Empty
+        }
+    }
+}
+</pre>
+<h3>ReportModel.json&reportId=HMaps.json</h3>
+<pre class="brush: c-sharp;">
+{
+  "control": "WebReports.Controls.Report",
+  "title": "ѕример работы с легендой в картах highmaps",
+  "dataSources": [ ],
+  "dataParameters": [ ],
+  "reportViews": [
+    {
+      "condition": {
+        "parametersNames": [ "device" ],
+        "expression": "params.device == 'Desktop'"
+      },
+      "report": {
+        "control": "WebReports.Controls.ReportView",
+        "name": "ReportId",
+        "sections": [{
+            "control": "WebReports.Controls.Section",
+            "name": "mapCustomControl1",
+            "content": {
+              "control": "WebReports.Controls.Maps.Highmaps.HMaps",
+              "textView" : {
+                "control": "WebReports.Controls.Text.HandlebarsText",
+                "name": "plainText",
+                "text": "Ёто простой текст."
+              }
+            }
+          }
+        ],
+        "layout": {
+          "control": "WebReports.Controls.ReportLayout",
+          "rows": [
+            {
+              "fluid": "true",
+              "cells": [
+                {
+                  "span": 12,
+                  "sectionName": "mapCustomControl1"
+                }
+              ]
+            }
+          ]
+        },
+        "dataSources": [],
+        "resources": [
+          {
+            "uuid": "HMaps_uuid_1",
+            "version": "1",
+            "filePath": "CompiledScripts/customControls/Maps/Highmaps/HMaps.js",
+            "mimeType": "application/javascript"
+          }
+        ]
+      }
+    }
+  ]
+}
+			</pre>
+			</td>
+		</tr>
+	</table>
+ </body>
+</html>

@@ -1,0 +1,208 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.all();
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>  
+<h1>Работаем с классом. Часть третья.</h1>
+  <!-- Комментарий -->
+  <a href = "index.html">index</a>
+<table border="0" width="100%" align="center">
+    <tr>
+        <td>
+            <center><h3>В данном примере мы рассмотрим, как использовать одну функцию в нескольких классах.</h3></center>
+            <p>
+				&nbsp;&nbsp;&nbsp;Первым шагом нужно обратить внимание на <b>WebReports.Utils.Common</b> по пути <b>src/ts/Utils/Common.ts</b> - в данном файле содержатся
+				функции, которые используются повсеместно во фронтенде. Нам данный файл интересен в качестве примера реализации нашей будущей 
+				функции.
+			</p>
+			<h3>Алгоритм состоит из следующих шагов:</h3>
+			<ul>
+				<li>Создать папку <b>Utils</b> и в ней <b>Common.ts</b>(или свое наименование) с нужной функцией</li>
+				<li>В <b>"resources": []</b> в модели прописать <b>js</b> скрипт используемого <b>Common.js</b>.</li>
+				<li>Обращаемся из главного скрипта командрй <b>WebReports.Utils.Common.Function();</b></li>
+			</ul>
+			<hr>
+			<h2>Исходники:</h2>
+			<h3>Utils/HMapCommon.ts</h3>
+			<pre class="brush: javascript;">
+module WebReports.Utils.Class {
+    export function CommonClass(a, b): any[] {
+        let result = a + b;
+        return result;
+    }
+}		</pre>
+		<h3>ReportModel.json&reportId=Class3.json</h3>
+		<pre class="brush: javascript;">
+{
+  "control": "WebReports.Controls.Report",
+  "title": "Пример",
+  "dataSources": [ ],
+  "dataParameters": [ ],
+  "reportViews": [
+    {
+      "condition": {
+        "parametersNames": [ "device" ],
+        "expression": "params.device == 'Desktop'"
+      },
+      "report": {
+        "control": "WebReports.Controls.ReportView",
+        "name": "ReportId",
+        "sections": [
+          {
+            "control": "WebReports.Controls.Section",
+            "name": "mapCustomControl1",
+            "content": {
+              "control": "WebReports.Controls.Primer.Class",
+              "repeatClass": {
+                "control": "WebReports.Controls.Primer.RepeatClass"
+              }
+            }
+          }
+        ],
+        "layout": {
+          "control": "WebReports.Controls.ReportLayout",
+          "rows": [
+            {
+              "fluid": "true",
+              "cells": [
+                {
+                  "span": 12,
+                  "sectionName": "mapCustomControl1"
+                }
+              ]
+            }
+          ]
+        },
+        "dataSources": [],
+        "resources": [
+          {
+            "uuid": "Class_uuid_1",
+            "version": "1",
+            "filePath": "CompiledScripts/customControls/Primer/Class.js",
+            "mimeType": "application/javascript"
+          },
+          {
+            "uuid": "RepeatClass_uuid_1",
+            "version": "1",
+            "filePath": "CompiledScripts/customControls/Primer/RepeatClass.js",
+            "mimeType": "application/javascript"
+          },
+          {
+            "uuid": "CommonClass_uuid_1",
+            "version": "CommonClass_version_1",
+            "filePath": "CompiledScripts/customControls/Primer/Utils/Common.js",
+            "mimeType": "application/javascript"
+          }
+        ]
+      }
+    }
+  ]
+}		</pre>
+		<h3>Class.ts</h3>
+		<pre class="brush: javascript;">declare module WebReports.Model.Primer {
+    export interface Class extends Control {
+        textView: Text;
+        repeatClass: Primer.RepeatClass;
+
+    }
+}
+module WebReports.Controls.Primer {
+    export class Class extends UIComponent {
+        protected expressionContextProvider: IExpressionContextProvider;
+        constructor(private  model: WebReports.Model.Primer.Class, args: any) {
+            super();
+            this.expressionContextProvider = &#60;IExpressionContextProvider>args[0];
+        }
+        public render(container: HTMLElement) {
+            var containerMap = $("&#60;div>")
+                .attr("id", "containerMap")
+                .appendTo(container);
+            let classOne = Utils.Class.CommonClass(111, 555);
+            $(containerMap).append("&#60;div class='text-control'>"  +  classOne + " &#60;/div>");
+            this.createLegend(containerMap);
+        }
+        private createLegend(container: JQuery): void {
+            var legend = (&#60;IUIComponent>ControlFactory.create(this.model.repeatClass, this));
+            this.addChildComponent(legend, this);
+            legend.render(container);
+        }
+        public refresh(container: HTMLElement) {
+            // Empty
+        }
+    }
+}		</pre>
+		<h3>RepeatClass.ts</h3>
+		<pre class="brush: javascript;">declare module WebReports.Model.Primer {
+    export interface RepeatClass extends Control {
+        textView: Text;
+    }
+}
+module WebReports.Controls.Primer {
+    export class RepeatClass extends UIComponent {
+        protected expressionContextProvider: IExpressionContextProvider;
+        constructor(private  model: WebReports.Model.Primer.RepeatClass, args: any) {
+            super();
+            this.expressionContextProvider = &#60;IExpressionContextProvider>args[0];
+        }
+        public render(container: HTMLElement) {
+            var containerMap = $("&#60;div>")
+                .attr("id", "containerMap")
+                .appendTo(container);
+            let classOne = Utils.Class.CommonClass(10000, 1);
+            $(containerMap).append("&#60;div class='text-control'>"  +  classOne + " &#60;/div>");
+        }
+        public refresh(container: HTMLElement) {
+            // Empty
+        }
+    }
+}
+		</pre>
+<hr>
+<h3>Результат:</h3>
+<center><img src = "projects/history/3. Class_three/3. Class_three.png"></center>
+
+	<br>
+	<br>
+	<center><a href= "projects/3. Class_three.zip"> Файлы проекта можно скачать здесь. </a></center>
+	<br>
+	<br>
+	<b>Note</b>: Если в данном уроке будет что то не ясно, то Вы с легкостью можете найти множества полезной литературы по данной теме. 
+	Работа данного цикла замечательно описана в учебниках по javascript и так же имеется множество различных примеров в интеренете. Успехов!
+	<br>
+	<br>
+	<center> <b>Сделал прогу! ПРОГРУНТИ!</b> </center>
+	<br>
+	<br>
+        </td>
+    </tr>
+</body>
+</html>

@@ -1,0 +1,158 @@
+/*
+=====================================
+project: Distinctive
+author:  Luka Cvrk (www.solucija.com)
+-------------------------------------
+2009. Solucija
+=====================================
+*/
+
+*{margin:0;padding:0}:focus,:active {outline:0}img{border: 0}
+
+body { font: .8em Arial, Tahoma, Verdana; background: #fff url(../images/bg.gif) repeat-x; color: #777; }
+
+a { 
+	text-decoration: none; 
+	color: #B20F0F; 
+}
+
+h1 { font-size: 1.4em; font-weight: normal; }
+h1 a { color: #fff; font-size: 1.6em; }
+h2 { font-size: 1.2em; }
+
+h3 { 
+font-size: 1.2em;
+background: #B00A0A url(../images/redbg.gif) repeat-x left bottom; 
+padding: 6px 7px; 
+color: #fff; 
+font-weight: normal; 
+margin: 0 0 15px; 
+float: left; 
+width: 95%;
+text-align: center;
+}
+
+h4 { margin: 0 0 15px; color: #555; font-weight: normal; font-size: 1.6em; font-weight: normal; }
+p { 
+	clear: both; 
+	line-height: 1.64em; 
+	margin: 0 0 15px; 
+text-align: justify;
+}
+
+.line_dividing { 
+	clear: both; 
+	border-bottom: 1px solid #ddd;
+	margin: 0 0 45px; 
+}
+
+.clear { clear: both; }
+#content { width: 970px; margin: 0 auto; }
+#top { color: #ccc; padding: 6px 20px 0; font-size: .84em; text-align: right; }
+
+#logo { 
+float: left; 
+background: url(../images/redbg.gif) repeat-x; 
+padding: 100px 25px 15px; 
+margin: -46px 0 20px; 
+width: 15%;
+}
+
+
+
+#logo h1 { 
+	text-shadow: 1px 1px 1px #7E0E0E; 
+	text-align: center;
+	}
+
+#menu { float: right; margin: 63px 20px 0; }
+#menu li { display: inline; font-size: 1.3em; }
+	#menu li a { float: left; color: #808080; padding: 0 0 5px; margin: 0 0 0 55px; }
+	#menu li a:hover, #menu li.current a, #menu li a:focus { color: #000; border-bottom: 1px solid #ddd; }
+#pitch { background: url(../images/monitor.gif) no-repeat right top; padding: 30px 350px 0 0; border-bottom: 1px solid #ddd; height: 210px; margin: 0 0 35px; }
+#pitch h1 { font-size: 2.6em; color: #000; margin: 0 0 20px; }
+#pitch h2 { line-height: 1.5em; }
+
+.left { float: left; width: 330px; }	
+.right { float: right; width: 630px; margin: 0 0 20px; }
+
+.right h3 { 
+	background: #808080; 
+	font-size: .84em; 
+	width: 98%;
+}
+
+.third { float: left; width: 296px; margin: 0 40px 20px 0; }
+.last { margin-right: 0; }
+#footer { clear: both; font-size: .84em; border-top: 1px solid #ddd; padding: 20px 0 0; }
+
+.pagination a {text-decoration:underline;} /*подчеркивание ссылок*/
+.pagination a:hover {text-decoration:none;} /*убрать подчеркивание ссылок при наведении*/
+.pagination .ditto_currentpage {color:#fff; background-color:#B2C629; border:1px solid #6f7b1a; padding: 1px 3px; margin:2px;  font-weight:bold; } /*оформление текущей страницы: цвет текста, цвет фона, цвет и ширина границы, размер отступов, текст жирным шрифтом*/
+.pagination .ditto_previous_link, .pagination .ditto_next_link{margin:0 10px;} /*отступы для ссылок «далее» и «назад»*/
+.pagination .ditto_page{ padding: 2px 5px;}/* отступы для номеров страниц*/
+
+
+/* ----------------------------------------------Column Navigation-------------------------------------*/
+
+#column .subnav{
+	display:block; 
+	width:250px;
+	padding:25px; 
+	background-color:#F9F9F9; 
+	margin-bottom:30px;
+}
+
+#column .subnav h2{
+	margin:0 0 20px 0;
+	padding:0 0 14px 0;
+	font-size:20px;
+	font-weight:normal;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	color:#666666;
+	background-color:#F9F9F9;
+	line-height:normal;
+	border-bottom:1px dotted #666666;
+}
+
+#column .subnav ul{
+	margin:0;
+	padding:0;
+	list-style:none;
+	}
+
+	#column .subnav a{
+	display:block;
+	margin:0;
+	padding:5px 10px 5px 20px;
+	color:#777777;
+	background:url(../images/green_file.gif) no-repeat 10px center #F9F9F9;
+	text-decoration:none;
+	border-bottom:1px dotted #666666;
+	}
+	
+#column .subnav li{
+	margin:0 0 3px 0;
+	padding:0;
+	}
+
+#column .subnav ul ul, 
+#column .subnav ul ul ul, 
+#column .subnav ul ul ul ul, 
+#column .subnav ul ul ul ul ul{border-top:none; padding-top:0;}
+
+
+
+#column .subnav a:hover{color:#B2C629; background-color:#F9F9F9;}
+
+#column .subnav ul ul a, 
+#column .subnav ul ul ul a, 
+#column .subnav ul ul ul ul a, 
+
+#column .subnav ul ul ul ul ul a{background:url(../images/black_file.gif) no-repeat #F9F9F9;}
+
+#column .subnav ul ul a{padding-left:40px; background-position:30px center;}
+#column .subnav ul ul ul a{padding-left:50px; background-position:40px center;}
+#column .subnav ul ul ul ul a{padding-left:60px; background-position:50px center;}
+#column .subnav ul ul ul ul ul a{padding-left:70px; background-position:60px center;}
+

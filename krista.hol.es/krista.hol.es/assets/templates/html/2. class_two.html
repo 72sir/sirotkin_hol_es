@@ -1,0 +1,221 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.all();
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <h1>Работаем с классом. Часть вторая.</h1>
+  <!-- Комментарий -->
+  <a href = "index.html">index</a>
+<table border="0" width="100%" align="center">
+    <tr>
+        <td>
+		<h2>Выведем надписи через внешний и внутренний классы.</h2>
+<p>
+	Для этого созданим новый файл и назовем его <b>"ReportModel.json&reportId=Class3.json"</b>. Путь во фронтенде для создания файла <b>src/assets/data/Meta</b>.<br>
+	<br>
+	После чего создадим папку <b>Primer</b> и еще два файла в ней, так же во фронтенде по пути <b>"customControls/Primer"</b>.
+	<br>
+	Первый файл с именем <b>"Class.ts"</b>, второй файл с именем <b>"RepeatClass.ts"</b><br><br>
+	В браузере мы получим сообщение двух видов <b>Это простой текст.</b> и <b>"Это простой текст. - Грузимся через легенду."</b> 
+</p>
+
+<hr>
+<h2>Исходники:</h2>
+<h3>ReportModel.json&reportId=Class3.json</h3>
+<pre class="brush: c-sharp;">
+{
+  "control": "WebReports.Controls.Report",
+  "title": "Пример",
+  "dataSources": [ ],
+  "dataParameters": [ ],
+  "reportViews": [
+    {
+      "condition": {
+        "parametersNames": [ "device" ],
+        "expression": "params.device == 'Desktop'"
+      },
+      "report": {
+        "control": "WebReports.Controls.ReportView",
+        "name": "ReportId",
+        "sections": [
+          {
+            "control": "WebReports.Controls.Section",
+            "name": "mapCustomControl1",
+            "content": {
+              "control": "WebReports.Controls.Primer.Class",
+              "textView" : {
+                "control": "WebReports.Controls.Text.HandlebarsText",
+                "name": "plainText",
+                "text": "Это простой текст."
+              },
+              "repeatClass": {
+                "control": "WebReports.Controls.Primer.RepeatClass",
+                "textView" : {
+                  "control": "WebReports.Controls.Text.HandlebarsText",
+                  "name": "plainText",
+                  "text": "Ёто простой текст. - √рузимс¤ через легенду."
+                }
+              },
+              "width": 900,
+              "height": 600
+            }
+          }
+        ],
+        "layout": {
+          "control": "WebReports.Controls.ReportLayout",
+          "rows": [
+            {
+              "fluid": "true",
+              "cells": [
+                {
+                  "span": 12,
+                  "sectionName": "mapCustomControl1"
+                }
+              ]
+            }
+          ]
+        },
+        "dataSources": [],
+        "resources": [
+          {
+            "uuid": "Class_uuid_1",
+            "version": "1",
+            "filePath": "CompiledScripts/customControls/Primer/Class.js",
+            "mimeType": "application/javascript"
+          },
+          {
+            "uuid": "RepeatClass_uuid_1",
+            "version": "1",
+            "filePath": "CompiledScripts/customControls/Primer/RepeatClass.js",
+            "mimeType": "application/javascript"
+          }
+        ]
+      }
+    }
+  ]
+}
+</pre>
+	<h3>Class.ts</h3>
+<pre class="brush: c-sharp;">
+declare module WebReports.Model.Primer {
+    export interface Class extends Control {
+        textView: Text;
+        repeatClass: Primer.RepeatClass;
+
+    }
+}
+module WebReports.Controls.Primer {
+    export class Class extends UIComponent {
+        protected expressionContextProvider:IExpressionContextProvider;
+        constructor(private  model:WebReports.Model.Primer.Class, args:any) {
+            super();
+            this.expressionContextProvider = &#60;IExpressionContextProvider>args[0];
+        }
+        public render(container: HTMLElement) {
+            var containerMap = $("&#60;div>")
+                .attr("id", "containerMap")
+                .appendTo(container);
+
+            this.createText(containerMap);
+            this.createLegend(containerMap);
+        }
+        private createText(container: JQuery): void {
+            var legend = (&#60;IUIComponent>ControlFactory.create(this.model.textView, this.expressionContextProvider));
+            this.addChildComponent(legend, this);
+            legend.render(container);
+        }
+        private createLegend(container: JQuery):void {
+            var legend = (&#60;IUIComponent>ControlFactory.create(this.model.repeatClass, this));
+            this.addChildComponent(legend, this);
+            legend.render(container);
+        }
+
+        public refresh(container:HTMLElement) {
+            // Empty
+        }
+    }
+}
+</pre>
+	<h3>RepeatClass.ts</h3>
+<pre class="brush: c-sharp;">
+declare module WebReports.Model.Primer {
+    export interface RepeatClass extends Control {
+        textView: Text;
+    }
+}
+module WebReports.Controls.Primer {
+    export class RepeatClass extends UIComponent {
+        protected expressionContextProvider: IExpressionContextProvider;
+        constructor(private  model: WebReports.Model.Primer.RepeatClass, args: any) {
+            super();
+            this.expressionContextProvider = &#60;IExpressionContextProvider>args[0];
+        }
+        public render(container: HTMLElement) {
+            var containerMap = $("&#60;div>")
+                .attr("id", "containerMap")
+                .appendTo(container);
+
+            this.createLegend(containerMap);
+        }
+
+        private createLegend(container: JQuery): void {
+            var legend = (&#60;IUIComponent>ControlFactory.create(this.model.textView, this.expressionContextProvider));
+            this.addChildComponent(legend, this);
+            legend.render(container);
+        }
+
+        public refresh(container: HTMLElement) {
+            // Empty
+        }
+    }
+}
+</pre>
+<hr>
+<h3>Результат:</h3>
+<center><img src = "projects/history/2. Class_two/2.png"></center>
+
+	<br>
+	<br>
+	<center><a href= "projects/2. Class_two.zip"> Файлы проекта можно скачать здесь. </a></center>
+	<br>
+	<br>
+	<b>Note</b>: Если в данном уроке будет что то не ясно, то Вы с легкостью можете найти множества полезной литературы по данной теме. 
+	Работа данного цикла замечательно описана в учебниках по javascript и так же имеется множество различных примеров в интеренете. Успехов!
+	<br>
+	<br>
+	<center> <b>Сделал прогу! ПРОГРУНТИ!</b> </center>
+	<br>
+	<br>
+</td></tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,245 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.all();
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+ <body>
+  <h1>Работаем через forEach с интерфейсам модели.</h1>
+  <!-- Комментарий -->
+    <a href = "index.html">index</a>
+
+	<table border="0" width="100%" align="center">
+	<tr>
+		<td>
+		<h3>1. Для начала зададим в модели данные интерфейса.</h3>
+			<pre class="brush: c-sharp;">
+            "content": {
+              "control": "WebReports.Controls.Primer.PrimerInterfForEach",
+              "forEachModel": [{
+                "forEachString": "Первый ",
+                "forEachNumber": 0
+              }, {
+                "forEachString" : "интерфейс ",
+                "forEachNumber" : 1
+              }, {
+                "forEachString" : "forEach.",
+                "forEachNumber" : 2
+              }
+              ]
+            }		
+			</pre>
+		<h3>2. Опишем экспортируемый интерфейс в модели.</h3>
+			<pre class="brush: c-sharp;">
+declare module WebReports.Model.Primer {
+    /** Данный интерфейс нужен для работы модели. */
+    export interface PrimerInterForEach extends Control {
+        forEachModel: IforEachModel[];
+    }
+    interface IforEachModel {
+        forEachString?: string;
+        forEachNumber?: number;
+    }
+}
+		</pre>
+		<h3>3. Опишем интерфейс в модуле между <b>"module WebReports.Controls.Primer {"</b> и <b>"export class PrimerInterfForEach extends UIComponent {"</b>, 
+		данный интерфейс будет служить типом для внутренней переменной контрола.</h3>
+		
+		<pre class="brush: c-sharp;">
+module WebReports.Controls.Primer {
+    interface IPrimerInterForEach {
+        forEachString?: string;
+        forEachNumber?: number;
+    }
+    export class PrimerInterfForEach extends UIComponent {
+		</pre>			
+		<h3>4. Описываем переменную и пишем алгоритм.</h3>
+		<pre class="brush: c-sharp;">
+        public render(container: HTMLElement): void {
+            let forEachModule: IPrimerInterForEach[] = [];
+            /**
+             * Обратите внимание что в условиях цикла this.model.forEachModel.forEach
+             * Переменная forEachModel должна совпадать с наименованием в модели
+             * с учетом в данном примере места расположения в "content".
+             */
+			$(container).append("&#60;div class='text-control'>&#60;b>Запустили ПЕРВЫЙ цикл.&#60;/b> &#60;/div>");
+            this.model.forEachModel.forEach((dataforEachModel: Model.Primer.IforEachModel, index: number) => {
+                forEachModule.push({
+                        forEachString: dataforEachModel.forEachString,
+                        forEachNumber: dataforEachModel.forEachNumber
+                });
+                $(container).append("&#60;div class='text-control'> Переменная - " + forEachModule[index].forEachString + "&#60;/div>");
+                $(container).append("&#60;div class='text-control'> Переменная - " + forEachModule[index].forEachNumber + "&#60;/div>");
+
+            });
+            $(container).append("&#60;div class='text-control'> &#60;b>Запустили ВТОРОЙ цикл.&#60;/b> &#60;/div>");
+            forEachModule.forEach((item: number, i: number) => {
+                $(container).append("&#60;div class='text-control'> Переменная - " + forEachModule[i].forEachString + "&#60;/div>");
+                $(container).append("&#60;div class='text-control'> Переменная - " + forEachModule[i].forEachNumber + "&#60;/div>");
+            });
+        }
+		</pre>			
+			
+		<h2>Исхдники программы.</h2>
+		<h3>PrimerInterfForEach.ts</h3>
+		<pre class="brush: c-sharp;">
+declare module WebReports.Model.Primer {
+    /** Данный интерфейс нужен для работы модели. */
+    export interface PrimerInterForEach extends Control {
+        forEachModel: IforEachModel[];
+    }
+    interface IforEachModel {
+        forEachString?: string;
+        forEachNumber?: number;
+    }
+}
+
+module WebReports.Controls.Primer {
+    interface IPrimerInterForEach {
+        forEachString?: string;
+        forEachNumber?: number;
+    }
+    export class PrimerInterfForEach extends UIComponent {
+        constructor(private model: WebReports.Model.Primer.PrimerInterForEach) {
+            super();
+        }
+        public render(container: HTMLElement): void {
+            let forEachModule: IPrimerInterForEach[] = [];
+            /**
+             * Обратите внимание что в условиях цикла this.model.forEachModel.forEach
+             * Переменная forEachModel должна совпадать с наименованием в модели
+             * с учетом в данном примере места расположения в "content".
+             */
+ 			$(container).append("&#60;div class='text-control'>&#60;b>Запустили ПЕРВЫЙ цикл.&#60;/b> &#60;/div>");
+            this.model.forEachModel.forEach((dataforEachModel: Model.Primer.IforEachModel, index: number) => {
+                forEachModule.push({
+                        forEachString: dataforEachModel.forEachString,
+                        forEachNumber: dataforEachModel.forEachNumber
+                });
+                $(container).append("&#60;div class='text-control'> Переменная - " + forEachModule[index].forEachString + " &#60;/div>");
+                $(container).append("&#60;div class='text-control'> Переменная - " + forEachModule[index].forEachNumber + " &#60;/div>");
+            });
+            $(container).append("&#60;div class='text-control'> &#60;b>Запустили ВТОРОЙ цикл.&#60;/b> &#60;/div>");
+            forEachModule.forEach((item: number, i: number) => {
+                $(container).append("&#60;div class='text-control'> Переменная - " + forEachModule[i].forEachString + " &#60;/div>");
+                $(container).append("&#60;div class='text-control'> Переменная - " + forEachModule[i].forEachNumber + " &#60;/div>");
+            });
+        }
+        public refresh() {
+            // Empty
+        }
+    }
+}
+		</pre>
+		<h3>ReportModel.json&reportId=PrimerInterfForEach.json</h3>
+		<pre class="brush: c-sharp;">
+{
+  "control": "WebReports.Controls.Report",
+  "title": "Пример работы forEach с интерфейсом.",
+  "dataSources": [ ],
+  "dataParameters": [ ],
+  "reportViews": [
+    {
+      "condition": {
+        "parametersNames": [ "device" ],
+        "expression": "params.device == 'Desktop'"
+      },
+      "report": {
+        "control": "WebReports.Controls.ReportView",
+        "name": "ReportId",
+        "sections": [
+          {
+            "control": "WebReports.Controls.Section",
+            "name": "mapCustomControl1",
+            "content": {
+              "control": "WebReports.Controls.Primer.PrimerInterfForEach",
+              "forEachModel": [{
+                "forEachString": "Первый ",
+                "forEachNumber": 0
+              }, {
+                "forEachString" : "интерфейс ",
+                "forEachNumber" : 1
+              }, {
+                "forEachString" : "forEach.",
+                "forEachNumber" : 2
+              }
+              ]
+            }
+          }
+        ],
+        "layout": {
+          "control": "WebReports.Controls.ReportLayout",
+          "rows": [
+            {
+              "fluid": "true",
+              "cells": [
+                {
+                  "span": 12,
+                  "sectionName": "mapCustomControl1"
+                }
+              ]
+            }
+          ]
+        },
+        "dataSources": [],
+        "resources": [{
+          "uuid": "PrimerforEach_uuid_1",
+          "version": "1",
+          "filePath": "CompiledScripts/customControls/Primer/PrimerInterfForEach.js",
+          "mimeType": "application/javascript"
+        }]
+      }
+    }
+  ]
+}		</pre>
+		</td>
+	</tr>
+	<tr>
+	<td>
+	<h2>Результат:</h2>
+		<center><img src="pic/forEach2.png" align="center"></center>
+	</td>
+	</tr>
+	</table>
+		
+	<br>
+	<br>
+	<center><a href= "projects/forEach_2.rar"> Файлы проекта можно скачать здесь. </a></center>
+	<br>
+	<br>
+	<b>Note</b>: Если в данном уроке будет что то не ясно, то Вы с легкостью можете найти множества полезной литературы по данной теме. 
+	Работа данного цикла замечательно описана в учебниках по javascript и так же имеется множество различных примеров в интеренете. Успехов!
+	<br>
+	<br>
+	<center> <b>Сделал прогу! ПРОГРУНТИ!</b> </center>
+	<br>
+	<br>
+ </body>
+</html>

@@ -1,0 +1,142 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.all();
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+ <body>
+  <h1>Читаем данные из модели.</h1>
+  <!-- Комментарий -->
+  <a href = "index.html">index</a>
+	<table border="0" width="100%" align="center">
+	<tr>
+		<td>		
+		<h3>Читаем данные из модели в переменную.</h3>
+		<p>Опишем модель и присвоим значение двум переменным <b>"width","height":</b></p>
+<pre class="brush: c-sharp;">
+{
+  "control": "WebReports.Controls.Report",
+  "title": "Пример работы с картами HMAP",
+  "dataSources": [],
+  "dataParameters": [],
+  "reportViews": [
+    {
+      "condition": {
+        "parametersNames": [ "device" ],
+        "expression": "params.device == 'Desktop'"
+      },
+      "report": {
+        "control": "WebReports.Controls.ReportView",
+        "name": "ReportId",
+        "sections": [
+          {
+            "control": "WebReports.Controls.Section",
+            "name": "mapCustomControl1",
+            "content": {
+              "control": "WebReports.Controls.Maps.Highmaps.HMaps",
+              "width": 500,
+              "height": 500
+            }
+          }
+        ],
+        "layout": {
+          "control": "WebReports.Controls.ReportLayout",
+          "rows": [
+            {
+              "fluid": "true",
+              "cells": [
+                {
+                  "span": 12,
+                  "sectionName": "mapCustomControl1"
+                }
+              ]
+            }
+          ]
+        },
+        "dataSources": [],
+        "resources": [
+          {
+            "uuid": "1",
+            "version": "1",
+            "filePath": "CompiledScripts/customControls/Maps/Highmaps/HMaps.js",
+            "mimeType": "application/javascript"
+          }]
+      }
+    }
+  ]
+}
+</pre>
+Обратим внимание на переменные <b>"width": 500, "height": 500 </b> в секции <b>"content".</b> Данные значения мы сейчас и попробуем применить к нашему контейнеру.
+Опишем переменные в <b>TS</b> файле.
+<hr>
+<h2>Первый способ присвоения данных в переменную:</h2>
+<pre class="brush: c-sharp;">
+declare module WebReports.Model.Maps.Highmaps {
+    export interface HMaps extends Control {
+        width: number;
+        height: number;
+    }
+}
+public render(container: HTMLElement): void {
+    var containerMap = $("&#60;div>")
+        .attr("id", "container-map")
+        .css("width", this.model.width)
+        .css("height", this.model.height)
+        .appendTo(container);
+}
+</pre>
+<p>Где <b>this.model.width</b> и <b>this.model.height</b> наши параметры описанные в модели.</p>
+<hr>
+<h2>Второй способ присвоения данных в переменную:</h2>
+<pre class="brush: c-sharp;">
+declare module WebReports.Model.Maps.Highmaps {
+    export interface HMaps extends Control {
+        width: number;
+        height: number;
+    }
+}
+public render(container: HTMLElement): void {
+	var width: number = this.model.width;
+	var height: number = this.model.height;
+}
+</pre>
+<p>
+	И теперь мы с этими переменными можем работать. 
+	<br>
+	То есть из модели мы можем данные брать, а в модель, по средствам программы данные записывать не можем.
+</p>
+	<br>
+	<br>
+	<br>
+		</td>
+	</tr>
+	</table>
+ </body>
+</html>

@@ -1,0 +1,143 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title></title>
+<link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body>
+<h1></h1>
+<!-- Комментарий -->
+<h1>Сбор общей полезной информации</h1>
+<table>
+<tr>
+<td>
+<ul>
+<li>  <a href="0. setting.html">Настройка среды разработки для WebStrom'a, команды Grunt'a и работы с репозиторием кристы.</a> </li>
+<hr>
+<li>  <a href="1. class_one.html">1. Работаем с классом. Реализуем класс в главном скрипте.</a> </li>
+<li>  <a href="2. class_two.html">2. Работаем с классом. Вынесем класс из главного скрипта.</a> </li>
+<li>  <a href="3. class_three.html">3. Обращаемся к одной функции из разных классов с помощью <b>WebReports.Utils</b>.</a> </li>
+<hr>
+<li>  <a href="4. foreach.html">1. forEach 1 - что это за цикл и как он устроен?</a> </li>
+<li>  <a href="5. foreachWorktheIntefeiseModel.html">2. forEach 2 - Работа с интерфейсами в модели.</a> </li>
+<hr>
+<li>  <a href="6. variables.html">Читаем данные из модели.</a> </li>
+<li>  <a href="7. dataSources.html">dataSources - Основные свойства в использовании.</a> </li>
+<hr>
+<li>  <a href="8. helpful.html">Полезная информация. Выводим значения переменых, работа тега <b>gettex()</b> и подключаем <b>js</b> скрипт. Подключаем в "resources" картинки и обращаемся к ним.</a> </li>
+<hr>
+<li>  <a href="9. PrimerRefreshText.html"><b>refresh</b> и <b>render</b> - как они устроены. (Доделать картинку.)</a> </li>
+<hr>
+<li>  <a href="10. Vitrins.html">Витрины - общая информация.</a> </li>
+<hr>
+<li>  <a href="11. Information.html">BI-отчёты_Руководство методолога.</a> </li>
+<hr>
+<li>  <a href="12. error.html">error.html</a> </li>
+<hr>
+	<li>  {{getPeriodInfo '$date' 1 1}} - месяц +1 (до 01.02.2016 г после 01.03.2016 г) </li>
+<h4>Добавить данные в !Конфигурацию! для представления в отчете:</h4>	
+<pre>{
+  "periodInfo" : {
+    "format" : "d.m.Y",
+    "dataSourceRef" : {
+          "uuid": "b0e73a65-5a16-4213-81b5-fd62b4860de7",
+          "version": "14.07.2016 12.48.49.488",
+          "name": "dataSourcesMonit"
+          }
+  },
+  "settings": {
+    "expression": "$date",
+    "viewFormat": 0,
+    "periodicity": 0
+  }
+}</pre>
+<hr>
+<li>Работа с МЕСЯЦЕМ даты, подстановка данных в строку зависимости от номера месяца.</li>
+<pre>
+  "sideTextItems": [{
+    "control": "WebReports.Controls.Text.SideText",
+    "position": 0,
+    "markup": {
+      "control": "WebReports.Controls.Text.Markup.MarkedProcessor"
+    },
+    "template": {
+      "control": "WebReports.Controls.Text.Templaters.HandlebarsTemplate"
+    },
+    "text": "&lt;div id='title' style='color: #000'>Лучшее ведомство по финансовому менеджменту по состоянию на 01.{{indicator 'indicatorName'}}{{getPeriodInfo '.$Y' 0 0}}&lt;/div>",
+    "indicators":[{
+      "control": "WebReports.Controls.Indicators.Text",
+      "name": "indicatorName",
+      "expression": "var x = $.ctx.parameters.paramPeriod.getMonth($.ctx.parameters.paramPeriod); if (x === 0 ) {return '1';} if (x === 3) {return '2';} if (x === 6) {return '3'} return '4'; ",
+      "cases": [
+        { "key": "1", "text": "04" },
+        { "key": "2", "text": "07" },
+        { "key": "3", "text": "10" },                                      
+        { "key": "4", "text": "01" }
+      ]
+    }]
+  }]
+</pre>
+<p>EPBS_006_013_widget_section</p>
+<hr>
+<h3 style='color: red'>MDX</h3>
+<h4>Обрезается надпись</h4>
+<p>В рубрике "Финансовый менеджмент" в отчете "Среднее значение показателей оценки качества финансового менеджмента по итогам..." обрезаются наименования ГАБС, например, при выборе Росреестр и МЧС России</p>
+<img src="pic/picture500-1.png" alt="Ошибка вывода не полного наименования из многомерной базы MDX" />
+<p>Решение:</p><br/>
+Находим запрос который выводит данную информацию. Выглядит он примерно так:
+<pre>SELECT 
+	non empty {[KVSR].[&lt;%EPBS_006_013_widget_4_filterNamePersona%>]}DIMENSION PROPERTIES [KVSR].[CLSCode], [Tab1]  ON ROWS,
+	non empty {&lt;%period(paramPeriod, '[Periods].[04-{YYYY}999{Q}]')%>}ON COLUMNS
+FROM CLQR01.DB</pre>
+И для того, что бы запрос выводил информацию полностью стоит добавить тег <b>, [Tab2]</b> в некоторых случаех и добавляют несколько тегов <b>, [Tab2], [Tab3], [Tab4], [Tab5], [Tab6]</b> пример:<br>
+
+<b>
+<pre>SELECT 
+	non empty {[KVSR].[&lt;%EPBS_006_013_widget_4_filterNamePersona%>]}DIMENSION PROPERTIES [KVSR].[CLSCode], [Tab1], [Tab2], [Tab3], [Tab4], [Tab5], [Tab6]  ON ROWS,
+	non empty {&lt;%period(paramPeriod, '[Periods].[04-{YYYY}999{Q}]')%>}ON COLUMNS
+FROM CLQR01.DB</pre>
+
+</b>
+
+<hr>
+<h2>Записать:</h2>
+<li>  <a href="#.html">1. ЗАПИСАТЬ - КАК ВЫВЕСТИ ТЕКСТ ИЗМЕНЯЮЩИЙСЯ ОТ ВЫБОРА ГОДА.</a> </li>
+<li>  <a href="#.html">2. ЗАПИСАТЬ - Реализация интефейса с кнопками.</a> </li>
+<li>  <a href="indicators.html">3. ЗАПИСАТЬ - Индикация. Описание и основные методы работы с ней.</a> </li>
+<li>  <a href="components.html">4. ЗАПИСАТЬ - Инфографика, как устроена и в чем суть работы.</a> </li>
+</ul>
+
+<h2>Что стоит еще описать:</h2>
+<p>
+	Структура JSON файла.<br>
+	&nbsp;&nbsp;&nbsp;- Тег расположения параметров для сайта.<br>
+	&nbsp;&nbsp;&nbsp;- Путь TS скрипта.<br>
+	<br>
+	Создаем контейнер<br>
+	&nbsp;&nbsp;&nbsp;- задать ширину и высоту из JSON файла<br>
+	&nbsp;&nbsp;&nbsp;- public render и public refresh<br>
+	<br>
+	Как подключается JSON файл к страничке:<br>
+	&nbsp;&nbsp;&nbsp;- работать с данными<br>
+	&nbsp;&nbsp;&nbsp;- интерфейсы<br>
+	&nbsp;&nbsp;&nbsp;- перебор массивов<br>
+	&nbsp;&nbsp;&nbsp;- выбор определенного поля<br>
+	<br>
+	Json - подключаем картинки<br>
+	&nbsp;&nbsp;&nbsp;- функция<br>
+	&nbsp;&nbsp;&nbsp;- описание картинки <br>
+	&nbsp;&nbsp;&nbsp;- Обозначение в ресурсах<br>
+	<br>
+	Работа с динамическими данными <br>
+	&nbsp;&nbsp;&nbsp;- Как описывать в json файле<br>
+	&nbsp;&nbsp;&nbsp;- Использование в ts файле <br>
+</p>
+
+
+</td>
+</tr>
+</table>
+</body>
+</html>

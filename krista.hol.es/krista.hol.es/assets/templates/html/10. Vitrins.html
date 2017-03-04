@@ -1,0 +1,126 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.all();
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<style>
+   li {
+    list-style-type: none; /* Убираем маркеры */
+   }
+   ul {
+    margin-left: 0; /* Отступ слева в браузере IE и Opera */
+    padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+   }
+    #tabl1 {
+    width: 400px; 
+   }
+   #tabtr {
+    width: 300px; /* Ширина таблицы */
+	text-align: center; 
+    border: none; /* Рамка вокруг таблицы */
+    border-bottom: 1px solid black; /* Убираем линию снизу */
+    border-right: 1px solid black; /* Убираем линию снизу */
+   }
+    #tabtd {
+	text-align: right; 
+    width: 300px; /* Ширина таблицы */
+    border: none; /* Рамка вокруг таблицы */
+    border-bottom: 1px solid black; /* Убираем линию снизу */
+    border-right: 1px solid black; /* Убираем линию снизу */
+   }
+  </style>
+</head>
+ <body>
+  <h1>Общая информация по витринам.</h1>
+  <!-- Комментарий -->
+  <a href = "index.html">index</a>
+
+	<table border="0" width="100%" align="center">
+		<tr>
+			<td>
+				<h3></h3>
+				<p>Для того чтобы привести наименования витрин для отчетов новой версии к единообразию, было принято решение наименование для витрин задавать по следующему принципу:</p>
+				<table id="tabl1">
+				<tr id="tabtr"> 
+				<td id="tabtd">1</td><td id="tabtd">2</td><td id="tabtd">3</td><td id="tabtd">4</td><td id="tabtd">5</td>
+				</tr>
+				<tr>
+				<td>5-7 симв</td><td>4-5 симв</td><td> 0-5 симв</td><td>фикс.</td><td>фикс.</td>
+				</tr>
+				</table>
+				<ul>
+					<li> <b>1.</b> 	Наименование региона\схемы. Желательно использовать Алиас базы, исключения возможны при длинных и некорректных наименованиях (обязательное, для всех витрин конкретного региона значение должно быть одинаковое) пример: MosObl</li>
+					<hr>
+					<li> <b>2.</b> 	Признак закачки\пакета\блока (обязательное) пример: FNS01</li>					
+					<hr>
+					<li> <b>3.</b> 	Дополнительный признак к закачке\пакета\блока (не обязательное, заполняется в том случае если в рамках 1 закачки\пакета\блока могут закачиваться данные разной периодичности и разных источников. Например отчетности об исполнении бюджета и формы по кредиторской задолженности) пример: KzDz</li>
+					<hr>
+					<li> <b>4.</b> 	Периодичность обновления данных в витрине (обязательное, фиксированное) одно из значений: </li>
+					<hr>
+					<li> <b>•</b> 	YEAR (год);</li>
+					<hr>
+					<li> <b>•</b> 	MONTH (месяц);</li>
+					<hr>
+					<li> <b>•</b> 	QUARTER (квартал);</li>
+					<hr>
+					<li> <b>•</b> 	OPER (оперативно, последний день по которому есть данные);</li>
+					<hr>
+					<li> <b>•</b> 	DAY (ежедневно, календарь, для выбора дня из списка)</li>
+					<hr>
+					<li> <b>•</b> 	WEEK (еженедельно)</li>
+					<hr>
+					<li> <b>•</b> 	CHANGES (по мере изменений)</li>
+					<hr>
+					<li> <b>5.</b> 	Тип базы данных  (обязательное, фиксированное) одно из значений:</li>
+					<hr>
+					<li> <b>•</b> 	RDB (РБД Oracle, Microsoft)</li>
+					<hr>
+					<li> <b>•</b> 	MDX(МБД Oracle, Microsoft)</li>
+					<hr>
+					<li> <b>•</b> 	DBF(разновидность РДБ)</li>
+					<hr>
+					<li> <b>•</b> 	XML(по xml файлам)</li>					
+					<hr>
+					<li></li>
+				</ul>	
+				<h3>Пример наименования витрины: MosObl_FNS01_MONTH_MDX</h3>
+				<p>
+					Кроме того, список используемых витрин необходимо вести в соответствующей ветке в всс:
+					<br> 
+					<center><b>Документация\Постановка задач\10_Web Интерфейс\Отчетность ПК\<Свой регион></b><br></center><br>
+					<div align = "right">В документе указывать: <b>наименование витрины, описание, используемый блок, периодичность</b>.</div>
+				</p>
+				
+			</td>
+		</tr>
+
+	</table>
+ </body>
+</html>

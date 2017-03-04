@@ -1,0 +1,587 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.all();
+    </script>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title></title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <h1>dataSources - Основные свойства в использовании.</h1>
+  <!-- Комментарий -->
+  <a href = "index.html">index</a>
+	<table border="0" width="95%" align="center">
+        <tr>
+            <td>
+			<h2>Типы dataSources:</h2>
+			<h3>С фиксированными данными:</h3>
+			<p>Данный тип данных, задается в модели и позволяет работать с ним, через модель.</p>
+			<pre class="brush: c-sharp;">
+			"dataSources": [{
+				"control":"WebReports.Controls.Data.FixedDataSource",
+				"name":"FixedDetailPriceStore",
+				"uuid":"FixedDetailPriceStore",
+				"parameters":["priceFixed"],
+				"version":"1.0.1",
+				"columns":[{
+						"name":"id",
+						"type":"int"
+					}, {
+						"name":"name",
+						"type":"string"
+					}, {
+						"name":"parent",
+						"type":"int"
+					}],
+				"fixedData":[
+					[ 1, "До 50", 1 ],
+					[ 2, "До 100", 1 ],
+					[ 3, "до 200", 1 ],
+					[ 4, "до 500", 3 ],
+					[ 5, "до 600", 3 ],
+					[ 6, "до 700", 3 ]
+				]
+			}]
+			</pre>
+			<hr>
+			<h3>Не фиксированный источник, данные которые получаем с сервера:</h3>
+			<p>
+				Задается на сервере, в данном примере тегом - <b>"url": "http://sgmserv-2.krista.ru:777/ResultDrugPrice.aspx" </b>
+				<br>
+				При переходе по данному адресу получаем фиксированные данные на сервере:
+				<br>
+				<center><b>({"data": [[1,"Уголь А.",1,1],[2,"Аспирин",1,2],[3,"Анальгин",1,3],[4,"Парацетомол",2,1],[5,"Виагра",3,1],[6,"Аскорбинка",3,2]]})</center></b>
+			</p>
+				<pre class="brush: c-sharp;">
+			"dataSources": [{
+				"control": "WebReports.Controls.Data.JsonPDataSource",
+				"url": "http://sgmserv-2.krista.ru:777/ResultDrugPrice.aspx", 
+				"name": "ResultPriceStore",
+				"uuid": "ResultPriceStore",
+				"parameters": ["price", "detailPrice"],
+				"version": "1",
+				"columns": [
+					{
+						"name": "id",
+						"type": "int"
+					},
+					{
+						"name": "name",
+						"type": "string"
+					}
+				]
+			}]
+			</pre>
+			<hr>
+			<center><h2>Note: Данные типы данных взаимозаменяемы.</h2></center>
+			<hr>
+			<center><h1>Переделаем нефиксированный источник данных в фиксированный.</h1></center>
+			<h2>Рассмотрим модель с не фиксированными данными.</h2>
+				<pre class="brush: c-sharp;">
+{
+	"control": "WebReports.Controls.Report",
+	"title": "Переключающиеся кнопки для отчета Дележова А.",
+	"dataSources": [],
+	"reportViews": [{
+		"condition": {
+			"parametersNames": ["device"],
+			"expression": "params.device == 'Desktop'"
+		},
+		"report": {
+			"control": "WebReports.Controls.ReportView",
+			"name": "ReportId",
+			"dataParameters": [
+			{
+				"control": "WebReports.Controls.Data.Parameter",
+				"name": "priceFixed",
+				"title": "Виды цен - target",
+				"type": "string",
+				"client": {
+					"expression": "return $.row.get('parent') == $.value"
+				},
+				"required": true
+			},{
+				"control": "WebReports.Controls.Data.Parameter",
+				"name": "detailPriceFixed",
+				"title": "Детализация цен",
+				"type": "string",
+				"required": false
+			}],
+			"sections": [
+				{
+					"control": "WebReports.Controls.Section",
+					"name": "section2",
+					"title": "Переключающиеся кнопки (зависимые) - фиксированный источник.",
+					"parametersContainer":{
+						"control":"WebReports.Controls.ParametersContainer",
+						"parametersNames": ["priceFixedButtonGroup", "detailFixedButtonGroup"],
+						"parameters":[{
+							"control":"WebReports.Controls.Parameters.ButtonGroup",
+							"name":"priceFixedButtonGroup",
+							"dataSourceRef": {
+								"uuid":"FixedPriceStore",
+								"version":"1.0.1"
+							},
+							"dataParameterName":"priceFixed",
+							"valueField":"id",
+							"displayField": "name",
+							"allowDepress":false
+						},{
+							"control":"WebReports.Controls.Parameters.ButtonGroup",
+							"name":"detailFixedButtonGroup",
+							"dataSourceRef":{
+								"uuid":"FixedDetailPriceStore",
+								"version":"1.0.1"
+							},
+							"dataParameterName":"detailPriceFixed",
+							"valueField":"id",
+							"displayField": "name"
+						}]
+					},
+					"dataSourcesRefs": [{ "uuid": "FixedResultPriceStore", "version": "1" }],
+					"content": {
+						"control": "WebReports.Controls.Grids.PlaneGrid",
+						"name": "grid1",
+						"band": {
+							"dataSourceRef": { "uuid": "FixedResultPriceStore", "version": "1" },
+							"columns": [
+								{ "title": "ID", "name": "id" },
+								{ "title": "Имя", "name": "name" }
+							]
+						},
+						"height": 200
+					}
+				}
+			],
+			"layout": {
+				"control": "WebReports.Controls.ReportLayout",
+				"rows": [
+					{
+						"fluid": true,
+						"cells": [
+							{
+								"span": 12,
+								"sectionName": "section2"
+							}
+						]
+					}
+				]
+			},
+			"dataSources": [ {
+				"control":"WebReports.Controls.Data.FixedDataSource",
+				"name":"FixedPriceStore",
+				"uuid":"FixedPriceStore",
+				"version":"1.0.1",
+				"columns":[
+					{
+						"name":"id",
+						"type":"int"
+					},
+					{
+						"name":"name",
+						"type":"string"
+					}
+				],
+				"fixedData":[
+					[ 1, "Розничные цены"	],
+					[ 2, "Оптовые цены"		],
+					[ 3, "Цены поставщиков"	]
+				]
+			},{
+				"control":"WebReports.Controls.Data.FixedDataSource",
+				"name":"FixedDetailPriceStore",
+				"uuid":"FixedDetailPriceStore",
+				"parameters":["priceFixed"],
+				"version":"1.0.1",
+				"columns":[
+					{
+						"name":"id",
+						"type":"int"
+					},
+					{
+						"name":"name",
+						"type":"string"
+					},
+					{
+						"name":"parent",
+						"type":"int"
+					}
+				],
+				"fixedData":[
+					[ 1, "До 50", 1 ],
+					[ 2, "До 100", 1 ],
+					[ 3, "до 200", 1 ],
+					[ 4, "до 500", 3 ],
+					[ 5, "до 600", 3 ],
+					[ 6, "до 700", 3 ],
+					[ 7, "до 1000", 2 ],
+					[ 8, "до 1500", 2 ]
+				]
+			},{
+				"control": "WebReports.Controls.Data.JsonPDataSource",
+				"url": "http://sgmserv-2.krista.ru:777/ResultDrugPriceFixed.aspx", 
+				"name": "FixedResultPriceStore",
+				"uuid": "FixedResultPriceStore",
+				"parameters": ["detailPriceFixed"],
+				"version": "1",
+				"columns": [
+					{
+						"name": "id",
+						"type": "int"
+					},
+					{
+						"name": "name",
+						"type": "string"
+					}
+				]
+			}],
+			"resources": {
+
+			}
+		}
+	}]
+}
+</pre>
+<p>
+	Как мы видим из <b>dataSources</b> наш источник данных находится по адресу - <b>"http://sgmserv-2.krista.ru:777/ResultDrugPriceFixed.aspx", </b> обратившись по данному адресу мы получаем источник данных
+	вида - <b>({"data": [[1,"Уголь А.",1,1],[2,"Аспирин",1,2],[3,"Анальгин",1,3],[4,"Парацетомол",2,1],[5,"Виагра",3,1],[6,"Аскорбинка",3,2]]})</b>.
+	<br><br>
+	Что дает нам возможность создать фиксированный источних данных в dataSources.
+</p>
+<h3>Наша задача переписать следующиц объект из dataSources:</h3>
+<pre class="brush: c-sharp;">
+{
+	"control": "WebReports.Controls.Data.JsonPDataSource",
+	"url": "http://sgmserv-2.krista.ru:777/ResultDrugPriceFixed.aspx", 
+	"name": "FixedResultPriceStore",
+	"uuid": "FixedResultPriceStore",
+	"parameters": ["detailPriceFixed"],
+	"version": "1",
+	"columns": [{
+		"name": "id",
+		"type": "int"
+	}, {
+	"name": "name",
+	"type": "string"
+	}]
+}
+</pre>
+<p>
+	Добавим для более ясной картины параметров для тега <b>"fixedData"</b>. После чего визуально сравнив можно заметить различия между фиксированным и не фиксированными <b>"dataSources"</b> параметрами.
+</p>
+<pre class="brush: c-sharp;">
+{
+	"control": "WebReports.Controls.Data.FixedDataSource",
+	"name": "FixedResultPriceStore",
+	"uuid": "FixedResultPriceStore",
+	"parameters": ["detailPriceFixed"],
+	"version": "1",
+	"columns": [{
+		"name": "id",
+		"type": "int"
+	}, {
+		"name": "name",
+		"type": "string"
+	}, {
+		"name":"parent",
+		"type":"int"
+	}],
+	"fixedData": [
+		[1, "Уголь А.", 1, 1],
+		[2, "Аспирин", 1, 2],
+		[3, "Анальгин", 1, 3],
+		[4, "Парацетомол", 2, 1],
+		[5, "Виагра", 3, 1],
+		[6, "Аскорбинка", 3, 2],
+		[7, "Доктор Булыжников", 4, 1],
+		[8, "Лекарство", 5, 1],
+		[9, "Настойка", 6, 1],
+		[10, "Пища", 7, 1],
+		[11, "Бактерия", 8, 1],
+		[12, "Неизвестный элемент", 9, 1]
+	]
+}
+</pre>
+<p>
+	На этом наш проект работать не будет, потому что для того что бы он начал работу с нашим источником данных, ему следует указать об этом в "dataParameters".
+</p>
+<h3>Модель до изменения.</h3>
+<pre class="brush: c-sharp;">
+"report": {
+	"control": "WebReports.Controls.ReportView",
+	"name": "ReportId",
+	"dataParameters": [{
+		"control": "WebReports.Controls.Data.Parameter",
+		"name": "priceFixed",
+		"title": "Виды цен - target",
+		"type": "string",
+		"client": {
+			"expression": "return $.row.get('parent') == $.value"
+		},
+		"required": true
+	}, {
+		"control": "WebReports.Controls.Data.Parameter",
+		"name": "detailPriceFixed",
+		"title": "Детализация цен",
+		"type": "string",
+		"required": false
+	}],
+</pre>
+<p>
+	Нас интересует второй обьект из "dataParameters".
+</p>
+<pre class="brush: c-sharp;">
+{
+	"control": "WebReports.Controls.Data.Parameter",
+	"name": "detailPriceFixed",
+	"title": "Детализация цен",
+	"type": "string",
+	"required": false
+}
+</pre>
+<p>
+	Куда мы вносим следующие изменения.
+</p>
+<pre class="brush: c-sharp;">
+{
+	"control": "WebReports.Controls.Data.Parameter",
+	"name": "detailPriceFixed",
+	"title": "Детализация цен",
+	"type": "string",
+	"client": {
+		"expression": "return $.row.get('parent') == $.value"
+	},
+	"required": true
+}
+</pre>
+<h3>Таким образом изменяемая модель у нас получилась следующиго вида.</h3>
+<pre class="brush: c-sharp;">
+{
+	"control": "WebReports.Controls.Report",
+	"title": "Переключающиеся кнопки для отчета Дележова А.",
+	"dataSources": [],
+	"reportViews": [{
+		"condition": {
+			"parametersNames": ["device"],
+			"expression": "params.device == 'Desktop'"
+		},
+		"report": {
+			"control": "WebReports.Controls.ReportView",
+			"name": "ReportId",
+			"dataParameters": [
+				{
+					"control": "WebReports.Controls.Data.Parameter",
+					"name": "priceFixed",
+					"title": "Виды цен - target",
+					"type": "string",
+					"client": {
+						"expression": "return $.row.get('parent') == $.value"
+					},
+					"required": true
+				},{
+					"control": "WebReports.Controls.Data.Parameter",
+					"name": "detailPriceFixed",
+					"title": "Детализация цен",
+					"type": "string",
+					"client": {
+						"expression": "return $.row.get('parent') == $.value"
+					},
+					"required": true
+				}],
+			"sections": [
+				{
+					"control": "WebReports.Controls.Section",
+					"name": "section2",
+					"title": "Переключающиеся кнопки (зависимые) - фиксированный источник.",
+					"parametersContainer":{
+						"control":"WebReports.Controls.ParametersContainer",
+						"parametersNames": ["priceFixedButtonGroup", "detailFixedButtonGroup"],
+						"parameters":[{
+							"control":"WebReports.Controls.Parameters.ButtonGroup",
+							"name":"priceFixedButtonGroup",
+							"dataSourceRef": {
+								"uuid":"FixedPriceStore",
+								"version":"1.0.1"
+							},
+							"dataParameterName":"priceFixed",
+							"valueField":"id",
+							"displayField": "name",
+							"allowDepress":false
+						},{
+							"control":"WebReports.Controls.Parameters.ButtonGroup",
+							"name":"detailFixedButtonGroup",
+							"dataSourceRef":{
+								"uuid":"FixedDetailPriceStore",
+								"version":"1.0.1"
+							},
+							"dataParameterName":"detailPriceFixed",
+							"valueField":"id",
+							"displayField": "name"
+						}]
+					},
+					"dataSourcesRefs": [{ "uuid": "FixedResultPriceStore", "version": "1" }],
+					"content": {
+						"control": "WebReports.Controls.Grids.PlaneGrid",
+						"name": "grid1",
+						"band": {
+							"dataSourceRef": { "uuid": "FixedResultPriceStore", "version": "1" },
+							"columns": [
+								{ "title": "ID", "name": "id" },
+								{ "title": "Имя", "name": "name" }
+							]
+						},
+						"height": 200
+					}
+				}
+			],
+			"layout": {
+				"control": "WebReports.Controls.ReportLayout",
+				"rows": [
+					{
+						"fluid": true,
+						"cells": [
+							{
+								"span": 12,
+								"sectionName": "section2"
+							}
+						]
+					}
+				]
+			},
+			"dataSources": [ {
+				"control":"WebReports.Controls.Data.FixedDataSource",
+				"name":"FixedPriceStore",
+				"uuid":"FixedPriceStore",
+				"version":"1.0.1",
+				"columns":[
+					{
+						"name":"id",
+						"type":"int"
+					},
+					{
+						"name":"name",
+						"type":"string"
+					}
+				],
+				"fixedData":[
+					[ 1, "Розничные цены"	],
+					[ 2, "Оптовые цены"		],
+					[ 3, "Цены поставщиков"	]
+				]
+			},{
+				"control":"WebReports.Controls.Data.FixedDataSource",
+				"name":"FixedDetailPriceStore",
+				"uuid":"FixedDetailPriceStore",
+				"parameters":["priceFixed"],
+				"version":"1.0.1",
+				"columns":[
+					{
+						"name":"id",
+						"type":"int"
+					},
+					{
+						"name":"name",
+						"type":"string"
+					},
+					{
+						"name":"parent",
+						"type":"int"
+					}
+				],
+				"fixedData":[
+					[ 1, "До 50", 1 ],
+					[ 2, "До 100", 1 ],
+					[ 3, "до 200", 1 ],
+					[ 4, "до 500", 3 ],
+					[ 5, "до 600", 3 ],
+					[ 6, "до 700", 3 ],
+					[ 7, "до 1000", 2 ],
+					[ 8, "до 1500", 2 ]
+				]
+			}, {
+				"control": "WebReports.Controls.Data.FixedDataSource",
+				"name": "FixedResultPriceStore",
+				"uuid": "FixedResultPriceStore",
+				"parameters": ["detailPriceFixed"],
+				"version": "1",
+				"columns": [
+					{
+						"name": "id",
+						"type": "int"
+					},
+					{
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"name":"parent",
+						"type":"int"
+					}
+				],
+				"fixedData": [
+					[1, "Уголь А.", 1, 1],
+					[2, "Аспирин", 1, 2],
+					[3, "Анальгин", 1, 3],
+					[4, "Парацетомол", 2, 1],
+					[5, "Виагра", 3, 1],
+					[6, "Аскорбинка", 3, 2],
+					[7, "Доктор Булыжников", 4, 1],
+					[8, "Лекарство", 5, 1],
+					[9, "Настойка", 6, 1],
+					[10, "Пища", 7, 1],
+					[11, "Бактерия", 8, 1],
+					[12, "Неизвестный элемент", 9, 1]
+				]
+			}],
+			"resources": {}
+		}
+	}]
+}
+</pre>
+<p>
+	Обратите внимания что в <b>"fixedData"</b> у нас 12 элементов, и 12 элемент ни где не участвует. Попробуйте создать кнопку которая позволит данному элементу участвовать в общем показе данных.
+</p>
+	<br>
+	<br>
+	<center><a href= "projects/7Part1.zip"> Файлы проекта можно скачать здесь. </a></center>
+	<br>
+	<br>
+	<b>Note</b>: Если в данном уроке будет что то не ясно, то Вы с легкостью можете найти множества полезной литературы по данной теме. 
+	Работа данного цикла замечательно описана в учебниках по javascript и так же имеется множество различных примеров в интеренете. Успехов!
+	<br>
+	<br>
+	<center> <b>Сделал прогу! ПРОГРУНТИ!</b> </center>
+	<br>
+	<br>
+
+
+            </td>
+        </tr>
+	</table>
+ </body>
+</html>

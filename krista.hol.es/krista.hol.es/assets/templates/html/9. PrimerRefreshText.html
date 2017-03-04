@@ -1,0 +1,346 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushBash.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCpp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCSharp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushCss.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDelphi.js"></script>
+    <script type="text/javascript" src="scripts/shBrushDiff.js"></script>
+    <script type="text/javascript" src="scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPhp.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPlain.js"></script>
+    <script type="text/javascript" src="scripts/shBrushPython.js"></script>
+    <script type="text/javascript" src="scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="scripts/shBrushScala.js"></script>
+    <script type="text/javascript" src="scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="scripts/shBrushVb.js"></script>
+    <script type="text/javascript" src="scripts/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/shThemeDefault.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.all();
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+ <body>
+  <h1>refresh и render - как они устроены.</h1>
+  <!-- Комментарий -->
+    <a href = "index.html">index</a>
+	<center><p>Данный пример был взят по ссылке фронтенда - <a href="http://localhost/src/Report.dev.html?reportId=LeafletMap&version=1&device=Desktop"><b>Report.dev.html?reportId=LeafletMap&version=1&device=Desktop</b></a> 
+	в нем рассматривается работа карт <b>leaflet</b>. </p></center>
+	<table border="0" width="95%" align="center">
+	<tr>
+		<td>
+		<p>
+			В данном примере мы будем работать с 2 источниками данных в <b>"dataSources"</b>. <br><br>
+			Первый <b>FixedMapData</b> нам необходим для выборки искомой информации, он будет сравниватся с выбраным параметром второго источника и по средствам тега <b>"dataParameters"</b> клиентской части 
+			<b>"client": { "expression": "return $.value == $.row.get('year');"}</b> будет производится выборка, где <b>value</b> - это параметр который мы выбираем в выпадающем меню и описан он в теге 
+			<b>"parametersContainer" => "parameters": [{"valueField": "year"}]</b>. <br><br>
+			Второй <b>FixedYearData</b> 
+			необходим для отображения информации в выпадающем меню.
+		</p>
+				
+<p>Коротко о том, как работает данная конструкция:
+<br><br>
+Мы в <b>dataParameters</b> описываем откуда берем параметры, задаем запрос в эти параметры, далее в контейнере описываем откуда берем отображаемые параметры и значения, которые будут идти в переменнюу <b>value</b>.
+После описываем в нашу выборку <b>"text": "__Данные за {{report.parameters.paramYear}} год__",</b> и задаем в <b>content</b> источник <b>dataSourceRef</b>, которые нам нужен в <b>ts</b> скрипте для переменной <b>sources</b>
+<br>
+<p>
+Визуально выглядит так:
+<br>
+<br>
+В меню выпал списoк фиксированных данных <b>FixedYearData</b>, сравнился со вторым по средствам клиента: <b>"client": {"expression": "return $.value == $.row.get('year');"},</b>
+и полученный результат вывел в <b>"text": "__Данные за {{report.parameters.paramYear}} год__",</b> данный результат мы получаем в скрипте и выводим.
+</p>
+
+<p>
+	В данном скрипте для отображения данных используется <b>append</b> и при смене параметров строка не меняется, а добавляется новая.
+	<br><br>
+	Для того что бы сделать обновление строки, имееются 2 способа:
+	<br>
+	
+	1. Обнолять контейнер полностью и перезаписывать данные.
+	<br>
+	2. Использовать не метод вставки, а просто обновления. Записать в контйнер пустой <b>div</b>, а потом при смене просто его обновлять.
+</p>
+
+<p>Конечный исходник ts скрипта первого примера.</p>		
+		
+<pre class="brush: c-sharp;">
+declare module WebReports.Model.Primer {
+    export interface PrimerRefreshText extends Control {
+        forEachString: string[];
+        /** Заголовок легенды. */
+        title: Text;
+        /** Связанные источники данных. */
+        linkedDataSourcesRefs: Model.Versioning[];
+        /** Источник данных. */
+        dataSourceRef: Model.Versioning;
+
+    }
+}
+module WebReports.Controls.Primer {
+    export class PrimerRefreshText extends UIComponent {
+        constructor(private model: WebReports.Model.Primer.PrimerRefreshText) {
+            super();
+        }
+        public render(container: HTMLElement): void {
+            var str = Utils.Common.getHandlebarsText.call(this, this.model.title);
+
+            var sources =  this.model.linkedDataSourcesRefs
+                ? this.model.linkedDataSourcesRefs.concat([this.model.dataSourceRef])
+                : [this.model.dataSourceRef];
+            if (this.model.dataSourceRef) {
+                this.getDataSourceManager().subscribeOnFirstLoaded(this.getId(), sources, (success: boolean) => {
+                    this.refresh(container);
+                });
+                // Подписываемся на обновление любого источника от которого зависит контрол
+                this.getDataSourceManager().subscribeOnLoaded(this.getId(), sources, (success: boolean) => {
+                    this.refresh(container);
+                });
+            }
+        }
+        public refresh(container: HTMLElement) {
+            let str = Utils.Common.getHandlebarsText.call(this, this.model.title);
+            $(container).append("&#60;div class='text-control'> " + str + " &#60;/div>");
+        }
+    }
+}
+</pre>
+
+<p>Конечный исходник модели первого примера.</p>		
+
+<pre class="brush: c-sharp;">
+{
+  "control": "WebReports.Controls.Report",
+  "title": "Пример работы forEach.",
+  "dataSources": [ ],
+  "dataParameters": [ ],
+  "reportViews": [{
+      "condition": {
+        "parametersNames": [ "device" ],
+        "expression": "params.device == 'Desktop'"
+      },
+      "report": {
+        "control": "WebReports.Controls.ReportView",
+        "name": "ReportId",
+        "dataParameters": [{
+          "client": {
+            "expression": "return $.value == $.row.get('year');"
+          },
+          "control": "WebReports.Controls.Data.Parameter",
+          "name": "paramYear",
+          "title": "Год",
+          "type": "int",
+          "required": true,
+          "external": false,
+          "defaultValue": 2011
+        }],
+        "sections": [{
+            "control": "WebReports.Controls.Section",
+            "name": "mapCustomControl1",
+            "parametersContainer": {
+            "control": "WebReports.Controls.ParametersContainer",
+            "float": "top",
+            "parametersNames": ["paramYearVisual"],
+            "parameters": [{
+              "control": "WebReports.Controls.Parameters.List",
+              "name": "paramYearVisual",
+              "title": "Год",
+              "dataSourceRef": {
+                "uuid": "FixedYearData",
+                "version": "1"
+              },
+              "dataParameterName": "paramYear",
+              "displayField": "name",
+              "valueField": "year",
+              "multiSelect": false,
+              "width": 400
+            }]
+          },
+          "content": {
+            "control": "WebReports.Controls.Primer.PrimerRefreshText",
+            "title": {
+              "control": "WebReports.Controls.Text.HandlebarsText",
+              "text": "__Данные за {{report.parameters.paramYear}} год__",
+              "markup": {
+                "control": "WebReports.Controls.Text.Markup.MarkedProcessor"
+              },
+              "template": {
+                "control": "WebReports.Controls.Text.Templaters.HandlebarsTemplate"
+              }
+            },
+
+            "dataSourceRef": {
+              "uuid": "FixedMapData",
+              "version": "1",
+              "name": "FixedMapData"
+            }
+            }
+          }
+        ],
+        "layout": {
+          "control": "WebReports.Controls.ReportLayout",
+          "rows": [
+            {
+              "fluid": "true",
+              "cells": [
+                {
+                  "span": 12,
+                  "sectionName": "mapCustomControl1"
+                }
+              ]
+            }
+          ]
+        },
+        "dataSources": [{
+          "control": "WebReports.Controls.Data.FixedDataSource",
+          "uuid": "FixedMapData",
+          "name": "FixedMapData",
+          "version": "1",
+          "parameters":["paramYear"],
+          "fixedData": [
+            [2011],
+            [2012],
+            [2013]
+          ],
+          "columns": [{
+              "name":"year",
+              "type":"int"
+            }]
+        }, {
+          "control": "WebReports.Controls.Data.FixedDataSource",
+          "uuid": "FixedYearData",
+          "name": "FixedYearData",
+          "version": "1",
+          "parameters": [],
+          "fixedData": [
+            ["2011", 2011],
+            ["2012", 2012],
+            ["2013", 2013]
+          ],
+          "columns": [{
+            "name": "name",
+            "type": "string"
+          }, {
+            "name": "year",
+            "type": "int"
+          }]
+        }],
+        "resources": [{
+          "uuid": "PrimerforEach_uuid_1",
+          "version": "1",
+          "filePath": "CompiledScripts/customControls/Primer/PrimerRefreshText.js",
+          "mimeType": "application/javascript"
+        }]
+      }
+  }]
+}
+</pre>		
+<hr>
+<h2>Во втором примере рассмотрим алгорит где данные не добавляются, а обновляются.</h2>
+<p>
+	По мимо методов <b>render </b>и <b>refresh </b>еще имеются методы <b>init</b> (В нашем случае реализованный в виде <b>constructor</b>) и <b>destroy</b>. <br>
+	В данных примерах будем пользоваться только <b>render </b>, <b>refresh </b> и <b>init</b> - в виде <b>constructor</b>'а.<br>
+	Очень хорошие примеры работы методов можно найти во фронтенде по пути <b>ts/contorls/Charts/Highchart/Chart.ts</b><br/>
+</p>
+
+<h3>
+	<center>В нашем случае, при использовании той же модели, нужно чуть чуть переписать только <b>TS</b> скрипт. </center></h3>
+	
+	<p>Все необходимые действия из <b>render'a</b> мы переносим в <b>refresh</b> оставив только в <b>render'e</b> подписку на обновление любого источника от которого зависит контрол.</p>
+
+<pre class="brush: c-sharp;">
+declare module WebReports.Model.Primer {
+    export interface PrimerRefreshText extends Control {
+        /** Заголовок легенды. */
+        title: Text;
+        /** Связанные источники данных. */
+        linkedDataSourcesRefs: Model.Versioning[];
+        /** Источник данных. */
+        dataSourceRef: Model.Versioning;
+
+    }
+}
+module WebReports.Controls.Primer {
+    export class PrimerRefreshText extends UIComponent {
+
+        constructor(private model: WebReports.Model.Primer.PrimerRefreshText) {
+            super();
+        }
+
+        public render(container: HTMLElement): void {
+
+            var sources =  this.model.linkedDataSourcesRefs
+                ? this.model.linkedDataSourcesRefs.concat([this.model.dataSourceRef])
+                : [this.model.dataSourceRef];
+
+
+            if (this.model.dataSourceRef) {
+                this.getDataSourceManager().subscribeOnFirstLoaded(this.getId(), sources, (success: boolean) => {
+                    this.refresh(container);
+                });
+
+                // Подписываемся на обновление любого источника от которого зависит контрол
+                this.getDataSourceManager().subscribeOnLoaded(this.getId(), sources, (success: boolean) => {
+                    this.refresh(container);
+                });
+            }
+
+        }
+
+        public refresh(container: HTMLElement) {
+
+            let containerMap = $("&#060;div>")
+                .attr("id", "containerMap")
+                .appendTo(container);
+
+            let str = Utils.Common.getHandlebarsText.call(this, this.model.title);
+            $(container).empty();
+            $(containerMap).html(str).appendTo(container);
+
+        }
+    }
+}
+</pre>
+
+<p>
+<ul>
+	<li>Можно заметить что в <b>refresh</b> содержит новую переменную. Именно через переменную <b>containerMap</b> и происходит все волшебство. В данном случае, это отдельный тег <b>$("&#060;div>")</b>, в который 
+	мы и записываем данные. </li>
+	<li><b>str</b> - содержит в себе избираемые данные. </li>
+	<li><b>$(container).empty();</b> - чистит предыдущий запрос.</li>
+	<li><b>$(containerMap).html(str).appendTo(container);</b> - вставляет новые данные.</li>
+</ul>
+</p>
+
+	<center>
+		<h2>Не все проекты работают по системе специального обнуления.<br> Некоторые проекты можно просто вырезать из render'a и вставить в refresh, оставив в render условия подписки на контролы. </h2>
+		<p>Такие вещи уже зависят от решаемой задачи.</p>
+	</center>
+
+	</td>
+	</tr>
+	</table>
+	<br>
+	<br>
+	<center><a href= "projects/PrimerRefreshText.zip"> Файлы проекта можно скачать здесь. </a></center>
+	<br>
+	<br>
+	<b>Note</b>: Если в данном уроке будет что то не ясно, то Вы с легкостью можете найти множества полезной литературы по данной теме. 
+	Работа данного цикла замечательно описана в учебниках по javascript и так же имеется множество различных примеров в интеренете. Успехов!
+	<br>
+	<br>
+	<center> <b>Сделал прогу! ПРОГРУНТИ!</b> </center>
+	<br>
+	<br>
+ </body></html>

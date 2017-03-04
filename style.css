@@ -1,0 +1,492 @@
+
+* {margin:0;padding:0;border:0;}
+
+body {		
+	background:#FFFFFF;	
+	color:gray;		
+	font-family:"trebuchet ms", Arial, Verdana, Tahoma, sans-serif;		
+	font-size:15px;	
+	margin:1px;	
+}
+
+#stranka {	
+	width:800px;		
+	margin:0 auto;	
+	margin-top:20px;	
+	border:1px solid #C9D7F1;			
+	background:#FFFFFF;
+	
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+#lista {					
+	height:35px;		
+	text-align:center;	
+	background: url('obr/lista.png');						
+	color:#484848;
+}
+
+#lista ul li set{font-size:10px;}
+#lista ul li setint{font-size:12px;}
+
+#lista ul li{			
+	display: block;	
+	float: Right;				
+	border-left:1px solid #C9D7F1;
+}
+
+#lista ul li a{			width:120px;		color: #C9D7F1;	font-weight:bold;		text-decoration: none;	display: block;	height: 25px;		padding-top:5px;		text-decoration:none;}
+#lista ul li a:hover{	text-decoration: none;				color: white;			background:#676767;}
+ 
+a{	
+	text-decoration: none;					
+	color: #4682B4;	
+	font-size:15px;
+}
+
+a:hover{	
+	text-decoration: underline;		
+	color: #363636; 
+	font-size:15px;
+}
+
+.hov:hover{	
+	text-align:left;
+	height:	90px; 
+	width:	225px;
+}
+ 
+h1 {			
+	padding: 0;		
+	position: relative;		
+	margin-top:5px; 	
+	width: 100%; 	
+	height: 120px;	
+	overflow: hidden;	
+	clear: both;	
+	text-align: center;	
+	color: black;
+}
+
+h1 span {	
+	display: block;	
+	position: absolute; 	
+	left: 0; 
+	top: 0; 		
+	z-index: 1;			
+	width: 100%; 	
+	height: 120px;		
+	margin: 0; 	
+	padding: 0;			
+	background-image: url(obr/logo.png);
+	background-repeat: top left no-repeat;					
+	border-bottom:1px solid #ffffff;
+}
+
+h1 span a {display: block;	width: 100%;				height: 120px;}
+
+h99{
+	font-size:32px;
+}
+
+menu {		width:100%;			height:34px;			background: url('obr/menu.png');	border:1px solid #000000;	text-align:center;	color:#484848;		margin:0 auto;}
+menu li{	display: block;		float: left;				border-right:1px solid #ffffff;}
+menu li a{	width:100px;			color: #000000;		text-decoration: none;display: block;height: 25px;			padding-top:5px;	text-decoration:none;}
+menu li a:hover{color: white;	background: url('obr/sekce.png');								text-decoration:underline;}
+
+.akt {				color:white;	background: url('obr/sekce.png');}
+
+#menu{			float: right;				width:200px;										margin-right:5px;}
+
+#menu h2{		
+	color:#FFFFFF;		
+	background: url('obr/sekce2.png'); 		
+	font-size:16px;
+}
+
+#menu ul{		list-style:none;		border:1px solid ;					margin-top:5px;		width:;}
+#menu ul li a{			text-decoration:none;		display:block;				color:#000000;		width:182px;		margin:3px 0 3px 3px;	height:22px;				padding-left:10px;			padding-top:5px;	background-image: url(obr/rubrika.png);}								
+#menu ul li a:hover {	background-image: url(obr/rubrika2.png);}
+#menu ul li a.akt {		background-image: url(obr/rubrika2.png);}
+
+#obsah {		
+	float:center; 			
+	color:#000000; 
+	text-align:justify;		
+	
+	padding-left: 10px; 	
+	padding-right: 10px; 
+}
+
+#obsah h2 {	
+	color:#000000;	
+	height:24px;		
+	padding-top:4px;		
+	padding-left:10px;	
+	font-size:16px;	
+	background: url('obr/nadpis.png');	
+	
+	border-top-left-radius: 5px;	
+	border-top-right-radius: 5px;				
+	border-bottom-right-radius: 5px;		
+	border-bottom-left-radius: 5px;
+}
+	
+#obsah p {	font-size:20px; 	text-align:justify;			font-family:'Bad Script', cursive;	}
+#obsah ps {	font-size:16px; 	text-align:right;			font-family:"trebuchet ms", Arial, Verdana, Tahoma, sans-serif;	}
+
+#obsah pts {	
+	font-size:24px; 	
+	text-align:justify;	
+	Color:#CD853F;		
+	font-family:'Bad Script', cursive;	
+}
+
+#obsah pts_two {	
+	font-size:19px; 	
+	text-align:justify;	
+	Color:#CD853F;		
+	font-family:'Bad Script', cursive;	
+	
+	
+}
+
+#obsah klg {	
+	font-size:14px; 	
+	text-align:justify;
+	padding: 0px;	
+	Color:Black;		
+	font-family:'Bad Script', cursive;	
+}
+
+#obsah ftts {	font-size:14px; 	text-align:justify;	Color:Black;		font-family:"trebuchet ms", Arial, Verdana, Tahoma, sans-serif;	}
+
+
+
+
+
+#obsah mal_pr{	
+	font-size:10px; 
+	text-align:right;
+	
+	Color:Black;	
+	font-family:"trebuchet ms", Arial, Verdana, Tahoma, sans-serif;	
+
+}
+
+h6{		color:green;		font-size:21px;}
+
+ul{padding-left:25px;}
+
+#pata {		width:100%;		height:28px;		padding-top:7px;	margin:5px;	clear:both;		text-align:center;	background: url('obr/pata.png');		color:white;}
+#pata a {	color:#FFFFFF; 		}
+#pata a:hover {					color:white;		text-decoration:none;}
+
+#c1 {
+	width:765px;
+	font-size:12px;
+	overflow: auto; 
+	padding: 8px; 
+	border: 1px solid #ccc; 
+	background: #F5F5F5; 
+	color: black;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+	
+	
+#c2 {
+	overflow: auto; height: 310px; 
+	width: 175px; 
+	padding: 8px; 
+	border: 1px solid #ccc; 
+	background: #F5F5F5; 
+	color: black;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+
+}
+	
+.separator { 
+  background:#FFFFFF; 
+  border-top:1px solid #C9D7F1; 
+  font-size:1px; 
+  height:1px; 
+  overflow:hidden; 
+  width:100%; 
+} 
+
+#ct1 {
+	width:765px;
+	overflow: auto; 
+	padding: 8px; 
+	border: 1px solid #ccc; 
+	background: #FAFAD2; 
+	color: #CD853F;
+	font-size:13px;
+	ont-family: New romans;
+	
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+	
+#ct2 {
+	width:765px;
+	font-size:13px;	
+	overflow: auto; 
+	padding: 8px; 
+	border: 1px solid #ccc; 
+	background: #87CEEB; 
+	color: #000080;
+	
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+#Slaid{
+	overflow: auto; 
+	text-align:center;
+	height: 90px; 
+	width: 760px; 
+	
+	padding-top: 8px; 
+	border: 1px solid #ccc; 
+	background: #F5F5F5; 
+	color: black;
+	
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	
+
+}
+
+
+
+#Higler_st{
+
+		border-left:1px solid #C9D7F1;
+}
+#Tiot{
+	overflow: auto; 
+	height: 210px; 
+	width: 175px; 
+	margin-top: 0px; 
+	margin: 0px;
+	
+	border: 1px solid #ccc; 
+	background: #F5F5F5; 
+	color: black;
+	
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+img.imgTiost{
+	height:	155px; 
+	width:	155px;
+	
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+
+img.sourse{
+	height:	90px; 
+	width:	225px;
+	
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	
+	border:1px solid #C9D7F1;			
+
+	float: right;
+	
+	margin: 5px 0px 5px 0px; 
+}
+
+
+
+img.imgTiosticon{
+	height:	125px; 
+	width:	100%;
+
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+
+}
+
+/**
+*—оздаем стиль дл€ блоков с по€вл€ющимс€ текстом:
+**/
+.opis{display:none; text-align: justify;}
+
+/*
+Tutorial Name: How to Create a Registration and Login System Using PHP and mySQL
+Author: Samuel Dalusung
+*/
+
+
+
+/*= GENERAL STYLES
+--------------------------------------------------------*/
+body {
+    background: #efefef;
+    font-family: 'Open Sans', sans-serif;
+    color: #777;
+}
+
+a {
+    color: #f58220;
+    font-weight: 400;
+}
+
+span {
+    font-weight: 300;
+    color: #f58220;
+}
+
+.mlogin {
+    /*margin: 170px auto 0;*/	
+}
+
+p{ 
+	font-size: 12px;
+}
+
+.mregister {
+    /*margin: 80px auto 0;*/
+}
+
+.error {
+    margin: 40px auto 0;
+    border: 1px solid #777;
+    padding: 3px;
+    color: #fff;
+    text-align: center;
+    width: 650px;
+    background: #f58220;
+}
+
+.regtext {
+    font-size: 13px;
+    margin-top: 26px;
+    color: #777;
+}
+
+/*= CONTAINERS
+--------------------------------------------------------*/
+.container {
+    padding: 25px 16px 25px 10px;
+    font-weight: 400;
+    overflow: hidden;
+    width: 350px;
+    height: auto;
+    background: #fff;
+
+}
+
+#welcome {
+    width: 500px;
+    padding: 30px;
+    background: #fff;
+    margin: 160px auto 0;
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.13);
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,.13);
+    box-shadow: 0 1px 3px rgba(0,0,0,.13);
+}
+
+.container h99 {
+	color: #777;
+    text-align: center;
+    font-weight: 300;
+    border: 1px dashed #777;
+    margin-top: 13px;
+}
+
+.container label {
+    color: #777;
+    font-size: 14px;
+}
+
+#login {
+    width: 320px;
+    margin: auto;
+    padding-bottom: 15px;	
+}
+
+.container form .input,.container input[type=text],.container input[type=password],.container input[type=e] {
+    background: #fbfbfb;
+    font-size: 24px;
+    line-height: 1;
+    width: 100%;
+    padding: 3px;
+    margin: 0 6px 5px 0;
+    outline: none;
+    border: 1px solid #d9d9d9;
+}
+
+.container form .input:focus {
+    border: 1px solid #f58220;
+    -webkit-box-shadow: 0 0 3px 0 rgba(245,130,32,0.75);
+    -moz-box-shadow: 0 0 3px 0 rgba(245,130,32,0.75);
+    box-shadow: 0 0 3px 0 rgba(245,130,32,0.75);
+}
+
+
+/*= BUTTONS
+--------------------------------------------------------*/
+
+.button{
+	border: solid 1px #da7c0c;
+	background: #f78d1d;
+	background: -webkit-gradient(linear, left top, left bottom, from(#faa51a), to(#f47a20));
+	background: -moz-linear-gradient(top,  #faa51a,  #f47a20);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#f47a20');
+	color: #fff;
+	padding: 7px 12px;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+    border-radius:4px;
+	float: right;
+	cursor: pointer;
+}
+
+
+.button:hover{
+background: #f47c20;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f88e11), to(#f06015));
+	background: -moz-linear-gradient(top,  #f88e11,  #f06015);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f88e11', endColorstr='#f06015');
+}
+
+
+
+/*= FOOTER
+--------------------------------------------------------*/
+footer {
+    color: #777;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 20px;
+}
